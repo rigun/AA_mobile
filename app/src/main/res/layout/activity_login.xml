@@ -2,11 +2,10 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:context=".MainActivity">
+    tools:context=".LoginActivity">
 
     <View
         android:id="@+id/view"
@@ -19,11 +18,11 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
-        android:id="@+id/imageview"
+        android:id="@+id/imageviewLogin"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_marginTop="25dp"
-        android:src="@drawable/motorkecil"
+        android:src="@drawable/admin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -31,8 +30,8 @@
         />
 
     <TextView
-        android:id="@+id/textview"
-        android:text="Selamat Datang"
+        android:id="@+id/title"
+        android:text="Login Admin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -42,11 +41,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageview"
+        app:layout_constraintTop_toBottomOf="@+id/imageviewLogin"
         android:textColor="#666666"/>
 
     <TextView
-        android:text="Pilih Akun Masuk ke Atma Auto"
+        android:id="@+id/subTitle"
+        android:text="Masukan Email dan Password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -56,7 +56,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textview"
+        app:layout_constraintTop_toBottomOf="@+id/title"
         android:textColor="#b3b3b3"/>
 
     <TextView
@@ -65,15 +65,46 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="36dp"
         android:layout_marginTop="36dp"
-        android:text="Pilih Masuk"
+        android:text="Login"
         android:textColor="#FFF"
         android:textSize="22sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
 
+    <EditText
+        android:id="@+id/textEmail"
+        android:hint="Email"
+        android:background="@drawable/bg_input"
+        android:paddingLeft="12dp"
+        android:textColor="#666666"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="36dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview2"/>
+
+    <EditText
+        android:id="@+id/textPass"
+        android:hint="Password"
+        android:background="@drawable/bg_input"
+        android:paddingLeft="12dp"
+        android:textColor="#666666"
+        android:inputType="textPassword"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="36dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textEmail"/>
+
     <Button
-        android:id="@+id/btnKonsumen"
-        android:text="Konsumen"
+        android:id="@+id/btnLogin"
+        android:text="Login"
         android:textAllCaps="false"
         android:textColor="#80744B"
         android:background="@drawable/bg_btn_primary"
@@ -81,28 +112,10 @@
         android:layout_width="0dp"
         android:layout_height="55dp"
         android:layout_marginStart="36dp"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="36dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textview2"/>
-
-    <Button
-        android:id="@+id/btnAdmin"
-        android:text="Admin"
-        android:textAllCaps="false"
-        android:textColor="#80744B"
-        android:background="@drawable/bg_btn_primary"
-        android:textSize="20sp"
-        android:layout_width="0dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="36dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnKonsumen"/>
-
-
+        app:layout_constraintTop_toBottomOf="@+id/textPass"/>
 
 </android.support.constraint.ConstraintLayout>
