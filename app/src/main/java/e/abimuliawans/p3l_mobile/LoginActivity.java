@@ -1,5 +1,6 @@
 package e.abimuliawans.p3l_mobile;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,6 +31,8 @@ public class LoginActivity extends AppCompatActivity {
     private TextView title,subTitle;
     private EditText txtEmail,txtPass;
     private Button btnLogin;
+    private ProgressDialog dialog;
+    private String token,testMerk;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +76,12 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT, true).show();
         }
         else{
+
+            dialog = new ProgressDialog(LoginActivity.this);
+            dialog.setTitle("Please Wait");
+            dialog.setMessage("Loading..");
+            dialog.show();
+
             Gson gson = new GsonBuilder()
                     .setLenient()
                     .create();
@@ -82,27 +91,31 @@ public class LoginActivity extends AppCompatActivity {
             Retrofit retrofit=builder.build();
             ApiClient apiClient=retrofit.create(ApiClient.class);
 
-            Call<EmployeeData> userDAOCall=apiClient.loginRequest(txtEmail.getText().toString(),txtPass.getText().toString());
+            Call<LoginResponse> userDAOCall=apiClient.loginRequest(txtEmail.getText().toString(),txtPass.getText().toString());
 
-            userDAOCall.enqueue(new Callback<EmployeeData>()
+            userDAOCall.enqueue(new Callback<LoginResponse>()
             {
-                public void onResponse(Call<EmployeeData> call, Response<EmployeeData> response)
+                public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response)
                 {
                     if(response.isSuccessful())
                     {
+                        dialog.dismiss();
+                        token = response.body().getToken();
                         Toasty.success(LoginActivity.this, "Login Success",
                                 Toast.LENGTH_SHORT, true).show();
 
-                        Intent i = new Intent(LoginActivity.this,MainAdminActivity.class);
+                        Intent i = new Intent(LoginActivity.this,DasboardActivity.class);
+                        i.putExtra("token",token);
                         startActivity(i);
                     }
                     else{
+                        dialog.dismiss();
                         Toasty.error(LoginActivity.this, "Incorrect email and password",
                                 Toast.LENGTH_SHORT, true).show();
                     }
                 }
 
-                public void onFailure(Call<EmployeeData> call, Throwable t)
+                public void onFailure(Call<LoginResponse> call, Throwable t)
                 {
                     Log.d("TAG", t.toString());
                     Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
