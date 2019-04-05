@@ -28,6 +28,7 @@ public class DasboardActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         token=(String)bundle.get("token");
 
+
         //Main Menu Button On Clicked
         imgSparepart = findViewById(R.id.imgSparepart);
         imgSparepart.setOnClickListener(new View.OnClickListener() {
@@ -43,6 +44,7 @@ public class DasboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(DasboardActivity.this, SupplierActivity.class);
+                i.putExtra("token",token);
                 startActivity(i);
             }
         });

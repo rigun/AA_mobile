@@ -5,14 +5,20 @@ import com.google.gson.annotations.SerializedName;
 
 public class VehicleDAO {
 
+    @SerializedName("id")
+    @Expose
+    public String idVehicle;
+
     @SerializedName("merk")
     @Expose
     public String merkVehicle;
+
     @SerializedName("type")
     @Expose
     public String typeVehicle;
 
-    public VehicleDAO(String merkVehicle, String typeVehicle) {
+    public VehicleDAO(String idVehicle, String merkVehicle, String typeVehicle) {
+        this.idVehicle = idVehicle;
         this.merkVehicle = merkVehicle;
         this.typeVehicle = typeVehicle;
     }
@@ -31,5 +37,13 @@ public class VehicleDAO {
 
     public void setTypeVehicle(String typeVehicle) {
         this.typeVehicle = typeVehicle;
+    }
+
+    public String getIdVehicle() {
+        return idVehicle;
+    }
+
+    public void setIdVehicle(String idVehicle) {
+        this.idVehicle = idVehicle;
     }
 }

@@ -35,6 +35,7 @@ public class RecycleAdapterVehicle extends RecyclerView.Adapter<RecycleAdapterVe
         VehicleDAO vhc = result.get(i);
         myViewHolder.mMerk.setText(vhc.getMerkVehicle());
         myViewHolder.mType.setText(vhc.getTypeVehicle());
+        myViewHolder.mId.setText(vhc.getIdVehicle());
     }
 
     @Override
@@ -44,12 +45,13 @@ public class RecycleAdapterVehicle extends RecyclerView.Adapter<RecycleAdapterVe
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private TextView mType,mMerk;
+        private TextView mType,mMerk,mId;
 
         public MyViewHolder(@NonNull  View itemView){
             super(itemView);
             mType=itemView.findViewById(R.id.typeVehicle);
             mMerk=itemView.findViewById(R.id.merkVehicle);
+            mId=itemView.findViewById(R.id.idVehicle);
         }
 
         @Override

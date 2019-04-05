@@ -1,6 +1,7 @@
 package e.abimuliawans.p3l_mobile;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.renderscript.Sampler;
 import android.support.design.widget.FloatingActionButton;
@@ -39,14 +40,40 @@ public class VehicleActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecycleAdapterVehicle recycleAdapterVehicle;
     private RecyclerView.LayoutManager layoutManager;
-    private String token;
+    private String token,inputMerk,inputType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vehicle);
 
+        //Inisialisasi Recycle
+        recyclerView =findViewById(R.id.recyclerViewVehicle);
+        recycleAdapterVehicle= new RecycleAdapterVehicle(VehicleActivity.this,mListVehicle);
+        RecyclerView.LayoutManager mLayoutManager= new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(recycleAdapterVehicle);
+        //Pengambilan Token
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        token=(String)bundle.get("token");
 
+        //Pengecekan Bearer Token
+        final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request request = chain.request().newBuilder().addHeader("Authorization", "Bearer "+token).build();
+                return chain.proceed(request);
+            }
+        });
+
+        // Menampilkan RecyclerView
+        setRecycleViewVehicle(httpClient);
+
+        //Floating Button
         floatingActionButton=findViewById(R.id.btnAdd);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,47 +83,36 @@ public class VehicleActivity extends AppCompatActivity {
 
                 txtMerkVeh= mView.findViewById(R.id.txtMerkVeh);
                 txtTipeVeh= mView.findViewById(R.id.txtTipeVeh);
-                btnTambahVeh= mView.findViewById(R.id.btnTambahVeh);
 
-                btnTambahVeh.setOnClickListener(new View.OnClickListener() {
+                inputMerk= txtMerkVeh.getText().toString();
+                inputType= txtTipeVeh.getText().toString();
+
+                mBuilder.setView(mView)
+                .setPositiveButton("Tambah", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        //
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Tambah
+                        addNewVehicle(httpClient);
+                    }
+                }).setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Batal
                     }
                 });
 
-                mBuilder.setView(mView);
+
                 AlertDialog dialog = mBuilder.create();
                 dialog.show();
             }
         });
 
-        //Inisialisasi Recycle
-        recyclerView =findViewById(R.id.recyclerViewVehicle);
-        recycleAdapterVehicle= new RecycleAdapterVehicle(VehicleActivity.this,mListVehicle);
-        RecyclerView.LayoutManager mLayoutManager= new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(recycleAdapterVehicle);
-
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        token=(String)bundle.get("token");
-        setRecycleViewVehicle();
 
     }
 
-    public void setRecycleViewVehicle(){
 
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+    public void setRecycleViewVehicle(OkHttpClient.Builder httpClient){
 
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Request request = chain.request().newBuilder().addHeader("Authorization", "Bearer "+token).build();
-                return chain.proceed(request);
-            }
-        });
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api1.thekingcorp.org/")
                 .client(httpClient.build())
@@ -123,5 +139,41 @@ public class VehicleActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT, true).show();
             }
         });
+    }
+
+    public void addNewVehicle(OkHttpClient.Builder httpClient){
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api1.thekingcorp.org/")
+                .client(httpClient.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiClient apiClient = retrofit.create(ApiClient.class);
+        Call<VehicleDAO> vehicleCall = apiClient.addVehicleReq(txtMerkVeh.getText().toString(),txtTipeVeh.getText().toString());
+
+        vehicleCall.enqueue(new Callback<VehicleDAO>() {
+            @Override
+            public void onResponse(Call<VehicleDAO> call, retrofit2.Response<VehicleDAO> response) {
+
+                if(response.isSuccessful())
+                {
+                    Toasty.success(VehicleActivity.this, "Kendaraan Berhasil Ditambah",
+                            Toast.LENGTH_SHORT, true).show();
+                }
+                else{
+
+                    Toasty.error(VehicleActivity.this, "Incorrect email and password",
+                            Toast.LENGTH_SHORT, true).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<VehicleDAO> call, Throwable t) {
+                Toasty.error(VehicleActivity.this, t.getMessage(),
+                        Toast.LENGTH_SHORT, true).show();
+            }
+        });
+
     }
 }

@@ -49,17 +49,5 @@
 
     </android.support.design.widget.TextInputLayout>
 
-    <Button
-        android:id="@+id/btnTambahVeh"
-        android:text="Tambah"
-        android:textAllCaps="false"
-        android:background="#FFE074"
-        android:layout_marginTop="10dp"
-        android:textSize="20sp"
-        android:textColor="#80744B"
-        android:layout_width="match_parent"
-        android:clickable="true"
-        android:layout_height="wrap_content" />
-
 
 </LinearLayout>
