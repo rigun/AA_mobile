@@ -84,8 +84,6 @@ public class VehicleActivity extends AppCompatActivity {
                 txtMerkVeh= mView.findViewById(R.id.txtMerkVeh);
                 txtTipeVeh= mView.findViewById(R.id.txtTipeVeh);
 
-                inputMerk= txtMerkVeh.getText().toString();
-                inputType= txtTipeVeh.getText().toString();
 
                 mBuilder.setView(mView)
                 .setPositiveButton("Tambah", new DialogInterface.OnClickListener() {

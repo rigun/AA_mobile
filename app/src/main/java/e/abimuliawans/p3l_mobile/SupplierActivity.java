@@ -1,11 +1,20 @@
 package e.abimuliawans.p3l_mobile;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -22,18 +31,24 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class SupplierActivity extends AppCompatActivity {
+public class SupplierActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     private List<SupplierDAO> mListSupplier = new ArrayList<>();
     private RecyclerView recyclerView;
     private RecycleAdapterSupplier recycleAdapterSupplier;
     private RecyclerView.LayoutManager layoutManager;
     private String token;
+    private FloatingActionButton floatingActionButton;
+    private EditText txtNameSup,txtPhoneSup,txtCitySup,txtAddressSup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_supplier);
+
+        //Set Toolbar
+        Toolbar toolbarSupplier = findViewById(R.id.toolbarSupplier);
+        setSupportActionBar(toolbarSupplier);
 
         //Inisialisasi Recycle
         recyclerView =findViewById(R.id.recyclerViewSupplier);
@@ -48,7 +63,40 @@ public class SupplierActivity extends AppCompatActivity {
         token=(String)bundle.get("token");
         setRecycleViewSupplier();
 
+        //Floating Button
+        floatingActionButton=findViewById(R.id.btnAddSupplier);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(SupplierActivity.this);
+                View mView = getLayoutInflater().inflate(R.layout.dialog_add_supplier,null);
+
+                txtNameSup=findViewById(R.id.txtSupName);
+                txtAddressSup=findViewById(R.id.txtSupAddress);
+                txtCitySup=findViewById(R.id.txtSupCity);
+                txtPhoneSup=findViewById(R.id.txtSupPhone);
+
+                mBuilder.setView(mView)
+                        .setPositiveButton("Tambah", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Tambah
+                            }
+                        }).setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                 //Batal
+                             }
+                });
+
+                AlertDialog dialog = mBuilder.create();
+                dialog.show();
+
+            }
+        });
+
     }
+
 
     public void setRecycleViewSupplier(){
 
@@ -88,4 +136,24 @@ public class SupplierActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu,menu);
+
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        SearchView searchView =(SearchView) menuItem.getActionView();
+        searchView.setOnQueryTextListener(this);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        recycleAdapterSupplier.getFilter().filter(s);
+        return false;
+    }
 }

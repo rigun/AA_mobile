@@ -6,18 +6,24 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class RecycleAdapterSupplier extends RecyclerView.Adapter<RecycleAdapterSupplier.MyViewHolder> {
+public class RecycleAdapterSupplier extends RecyclerView.Adapter<RecycleAdapterSupplier.MyViewHolder> implements Filterable {
 
     private List<SupplierDAO> result;
+    private List<SupplierDAO> listFull;
     private Context context;
 
     public RecycleAdapterSupplier(Context context,List<SupplierDAO> result) {
         this.context = context;
         this.result = result;
+
+        listFull= new ArrayList<>(result);
     }
 
     @NonNull
@@ -65,4 +71,40 @@ public class RecycleAdapterSupplier extends RecyclerView.Adapter<RecycleAdapterS
         }
     }
 
+
+    @Override
+    public Filter getFilter() {
+        return supplierFilter;
+    }
+
+    private Filter supplierFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<SupplierDAO> filterList = new ArrayList<>();
+
+            if(constraint == null || constraint.length() == 0){
+                filterList.addAll(listFull);
+            }else {
+                String filterPatten = constraint.toString().toLowerCase().trim();
+
+                for(SupplierDAO supplierDAO : listFull){
+                    if (supplierDAO.getNameSupplier().toLowerCase().contains(filterPatten)){
+                        filterList.add(supplierDAO);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filterList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            result.clear();
+            result.addAll((List)results.values);
+            notifyDataSetChanged();
+        }
+    };
 }
