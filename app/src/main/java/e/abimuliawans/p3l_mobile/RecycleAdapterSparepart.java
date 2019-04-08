@@ -56,9 +56,6 @@ public class RecycleAdapterSparepart extends RecyclerView.Adapter<RecycleAdapter
         myViewHolder.merkSparepart.setText(spr.getMerkSparepart());
 
 
-        byte[] decodedString = Base64.decode(spr.getPicSparepart(), Base64.DEFAULT);
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.skipMemoryCache(true);
         requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
@@ -66,7 +63,7 @@ public class RecycleAdapterSparepart extends RecyclerView.Adapter<RecycleAdapter
         requestOptions.error(R.drawable.ic_cloud_upload);
 
         Glide.with(context)
-                .load(decodedByte)
+                .load("https://api1.thekingcorp.org/images/sparepart/"+spr.getPicSparepart())
                 .apply(requestOptions)
                 .into(myViewHolder.gambarSpart);
 
