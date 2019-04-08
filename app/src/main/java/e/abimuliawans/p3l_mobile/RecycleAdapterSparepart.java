@@ -14,8 +14,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,9 +55,21 @@ public class RecycleAdapterSparepart extends RecyclerView.Adapter<RecycleAdapter
         myViewHolder.typeSparepart.setText(spr.getTypeSparepart());
         myViewHolder.merkSparepart.setText(spr.getMerkSparepart());
 
+
         byte[] decodedString = Base64.decode(spr.getPicSparepart(), Base64.DEFAULT);
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        myViewHolder.gambarSpart.setImageBitmap(decodedByte);
+
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.skipMemoryCache(true);
+        requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
+        requestOptions.placeholder(R.drawable.ic_cloud_upload);
+        requestOptions.error(R.drawable.ic_cloud_upload);
+
+        Glide.with(context)
+                .load(decodedByte)
+                .apply(requestOptions)
+                .into(myViewHolder.gambarSpart);
+
     }
 
     @Override

@@ -135,6 +135,7 @@ public class DasboardActivity extends AppCompatActivity {
                 Toasty.warning(DasboardActivity.this, "Anda Logout", Toast.LENGTH_SHORT, true).show();
                 Intent intent = new Intent(DasboardActivity.this,LoginActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
