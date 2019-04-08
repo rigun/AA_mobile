@@ -1,8 +1,10 @@
 package e.abimuliawans.p3l_mobile;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.renderscript.Sampler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -10,10 +12,17 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -30,7 +39,7 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class VehicleActivity extends AppCompatActivity {
+public class VehicleActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     FloatingActionButton floatingActionButton;
     EditText txtMerkVeh, txtTipeVeh;
@@ -40,12 +49,21 @@ public class VehicleActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecycleAdapterVehicle recycleAdapterVehicle;
     private RecyclerView.LayoutManager layoutManager;
-    private String token,inputMerk,inputType;
+    private String token,inputMerk,inputType,stringSend;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vehicle);
+
+
+        //Inisialisasi Progres Bar
+        progressBar = findViewById(R.id.progress_bar_vehicle);
+
+        //Set Toolbar
+        Toolbar toolbarSupplier = findViewById(R.id.toolbarSupplier);
+        setSupportActionBar(toolbarSupplier);
 
         //Inisialisasi Recycle
         recyclerView =findViewById(R.id.recyclerViewVehicle);
@@ -54,10 +72,11 @@ public class VehicleActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(recycleAdapterVehicle);
+
         //Pengambilan Token
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        token=(String)bundle.get("token");
+        SharedPreferences pref = getApplication().getSharedPreferences("MyToken", Context.MODE_PRIVATE);
+        token = pref.getString("token_access", null);
+
 
         //Pengecekan Bearer Token
         final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -122,8 +141,10 @@ public class VehicleActivity extends AppCompatActivity {
         vehicleCall.enqueue(new Callback<List<VehicleDAO>>() {
             @Override
             public void onResponse(Call<List<VehicleDAO>> call, retrofit2.Response<List<VehicleDAO>> response) {
+                progressBar.setVisibility(View.GONE);
+                LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(VehicleActivity.this,R.anim.layout_anim_recycle);
+                recyclerView.setLayoutAnimation(animationController);
                 List<VehicleDAO> vehicleDAOList = response.body();
-
                 recycleAdapterVehicle.notifyDataSetChanged();
                 recycleAdapterVehicle=new RecycleAdapterVehicle(VehicleActivity.this,vehicleDAOList);
                 recyclerView.setAdapter(recycleAdapterVehicle);
@@ -139,7 +160,7 @@ public class VehicleActivity extends AppCompatActivity {
         });
     }
 
-    public void addNewVehicle(OkHttpClient.Builder httpClient){
+    public void addNewVehicle(final OkHttpClient.Builder httpClient){
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api1.thekingcorp.org/")
@@ -157,10 +178,12 @@ public class VehicleActivity extends AppCompatActivity {
                 {
                     Toasty.success(VehicleActivity.this, "Kendaraan Berhasil Ditambah",
                             Toast.LENGTH_SHORT, true).show();
+
+                    setRecycleViewVehicle(httpClient);
                 }
                 else{
 
-                    Toasty.error(VehicleActivity.this, "Incorrect email and password",
+                    Toasty.error(VehicleActivity.this, "Gagal Menambahkan Data",
                             Toast.LENGTH_SHORT, true).show();
                 }
 
@@ -174,4 +197,30 @@ public class VehicleActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu,menu);
+
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        SearchView searchView =(SearchView) menuItem.getActionView();
+        searchView.setOnQueryTextListener(this);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        recycleAdapterVehicle.getFilter().filter(s);
+        return false;
+    }
+
+    public void setString(String yourString){
+        stringSend = yourString;
+    }
+
 }

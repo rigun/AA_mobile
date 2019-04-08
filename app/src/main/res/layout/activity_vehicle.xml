@@ -6,23 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".VehicleActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:popupTheme="@style/AppTheme.PopupOverlay" >
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
-            android:gravity="center"
-            android:text="Kendaraan"
-            android:textColor="#FFF"
-            android:id="@+id/toolbar_text"
-            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-            />
-    </android.support.v7.widget.Toolbar>
+    <include
+        android:id="@+id/toolbarSupplier"
+        layout="@layout/toolbar_layout_kendaraan"
+        />
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
@@ -36,6 +23,12 @@
         app:fabSize="normal"
         android:clickable="true"
         android:id="@+id/btnAdd"/>
+
+    <ProgressBar
+        android:id="@+id/progress_bar_vehicle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewVehicle"

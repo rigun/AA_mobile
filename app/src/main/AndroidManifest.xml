@@ -13,7 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SupplierActivity"></activity>
+        <activity android:name=".TambahSparepartActivity"></activity>
+        <activity android:name=".EditSupplierActivity" />
+        <activity android:name=".EditVehicleActivity" />
+        <activity android:name=".PemesananActivity" />
+        <activity android:name=".SupplierActivity" />
         <activity android:name=".SparepartActivity" />
         <activity android:name=".VehicleActivity" />
         <activity android:name=".DasboardActivity" />

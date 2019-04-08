@@ -1,8 +1,10 @@
 package e.abimuliawans.p3l_mobile;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,7 +16,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -37,14 +42,22 @@ public class SupplierActivity extends AppCompatActivity implements SearchView.On
     private RecyclerView recyclerView;
     private RecycleAdapterSupplier recycleAdapterSupplier;
     private RecyclerView.LayoutManager layoutManager;
-    private String token;
+    private String token,inputNama,inputPhone,inputCity,inputAddress;
     private FloatingActionButton floatingActionButton;
     private EditText txtNameSup,txtPhoneSup,txtCitySup,txtAddressSup;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_supplier);
+
+        //Pengambilan Token
+        SharedPreferences pref = getApplication().getSharedPreferences("MyToken", Context.MODE_PRIVATE);
+        token = pref.getString("token_access", null);
+
+        //Inisialisasi Progres Bar
+        progressBar = findViewById(R.id.progress_bar_supplier);
 
         //Set Toolbar
         Toolbar toolbarSupplier = findViewById(R.id.toolbarSupplier);
@@ -58,10 +71,20 @@ public class SupplierActivity extends AppCompatActivity implements SearchView.On
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(recycleAdapterSupplier);
 
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        token=(String)bundle.get("token");
-        setRecycleViewSupplier();
+
+        //Pengecekan Bearer Token
+        final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request request = chain.request().newBuilder().addHeader("Authorization", "Bearer "+token).build();
+                return chain.proceed(request);
+            }
+        });
+
+        // Menampilkan RecyclerView
+        setRecycleViewSupplier(httpClient);
 
         //Floating Button
         floatingActionButton=findViewById(R.id.btnAddSupplier);
@@ -71,16 +94,22 @@ public class SupplierActivity extends AppCompatActivity implements SearchView.On
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(SupplierActivity.this);
                 View mView = getLayoutInflater().inflate(R.layout.dialog_add_supplier,null);
 
-                txtNameSup=findViewById(R.id.txtSupName);
-                txtAddressSup=findViewById(R.id.txtSupAddress);
-                txtCitySup=findViewById(R.id.txtSupCity);
-                txtPhoneSup=findViewById(R.id.txtSupPhone);
+                txtNameSup=mView.findViewById(R.id.txtSupName);
+                txtAddressSup=mView.findViewById(R.id.txtSupAddress);
+                txtCitySup=mView.findViewById(R.id.txtSupCity);
+                txtPhoneSup=mView.findViewById(R.id.txtSupPhone);
+
+                inputNama=txtNameSup.getText().toString();
+                inputPhone=txtPhoneSup.getText().toString();
+                inputCity=txtCitySup.getText().toString();
+                inputAddress=txtAddressSup.getText().toString();
 
                 mBuilder.setView(mView)
                         .setPositiveButton("Tambah", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //Tambah
+                                addNewSupplier(httpClient);
                             }
                         }).setNegativeButton("Batal", new DialogInterface.OnClickListener() {
                             @Override
@@ -97,43 +126,74 @@ public class SupplierActivity extends AppCompatActivity implements SearchView.On
 
     }
 
+    public void setRecycleViewSupplier(OkHttpClient.Builder httpClient){
 
-    public void setRecycleViewSupplier(){
-
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Request request = chain.request().newBuilder().addHeader("Authorization", "Bearer "+token).build();
-                return chain.proceed(request);
-            }
-        });
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api1.thekingcorp.org/")
                 .client(httpClient.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ApiClient apiClient = retrofit.create(ApiClient.class);
-        Call<List<SupplierDAO>> apiClientSupplier = apiClient.getSupplier();
+        Call<ValueSupplier> apiClientSupplier = apiClient.getSupplier();
 
-        apiClientSupplier.enqueue(new Callback<List<SupplierDAO>>() {
+        apiClientSupplier.enqueue(new Callback<ValueSupplier>() {
             @Override
-            public void onResponse(Call<List<SupplierDAO>> call, retrofit2.Response<List<SupplierDAO>> response) {
-                List<SupplierDAO> supplierDAOList = response.body();
+            public void onResponse(Call<ValueSupplier> call, retrofit2.Response<ValueSupplier> response) {
+                progressBar.setVisibility(View.GONE);
+                LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(SupplierActivity.this,R.anim.layout_anim_recycle);
+                recyclerView.setLayoutAnimation(animationController);
                 recycleAdapterSupplier.notifyDataSetChanged();
-                recycleAdapterSupplier=new RecycleAdapterSupplier(SupplierActivity.this,supplierDAOList);
+                recycleAdapterSupplier=new RecycleAdapterSupplier(SupplierActivity.this,response.body().getResult());
                 recyclerView.setAdapter(recycleAdapterSupplier);
 
             }
 
             @Override
-            public void onFailure(Call<List<SupplierDAO>> call, Throwable t) {
+            public void onFailure(Call<ValueSupplier> call, Throwable t) {
 
                 Toasty.error(SupplierActivity.this, t.getMessage(),
                         Toast.LENGTH_SHORT, true).show();
             }
         });
+    }
+
+    public void addNewSupplier(final OkHttpClient.Builder httpClient){
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api1.thekingcorp.org/")
+                .client(httpClient.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiClient apiClient = retrofit.create(ApiClient.class);
+        Call<SupplierDAO> supplierDAOCall = apiClient.addSupplierReq(txtNameSup.getText().toString(),txtPhoneSup.getText().toString(),
+                txtAddressSup.getText().toString(),txtCitySup.getText().toString());
+
+        supplierDAOCall.enqueue(new Callback<SupplierDAO>() {
+            @Override
+            public void onResponse(Call<SupplierDAO> call, retrofit2.Response<SupplierDAO> response) {
+
+                if(response.isSuccessful())
+                {
+                    Toasty.success(SupplierActivity.this, "Supplier Berhasil Ditambah",
+                            Toast.LENGTH_SHORT, true).show();
+
+                    setRecycleViewSupplier(httpClient);
+                }
+                else{
+
+                    Toasty.error(SupplierActivity.this, "Gagal Menambahkan Data",
+                            Toast.LENGTH_SHORT, true).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<SupplierDAO> call, Throwable t) {
+                Toasty.error(SupplierActivity.this, t.getMessage(),
+                        Toast.LENGTH_SHORT, true).show();
+            }
+        });
+
     }
 
     @Override

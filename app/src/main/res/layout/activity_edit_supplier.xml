@@ -1,78 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="5dp">
+    tools:context=".EditSupplierActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:id="@+id/textNamaVeh"
-        android:text="Tambah Supplier"
-        android:textColor="#172646"
-        android:fontFamily="@font/mm"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:layout_gravity="center"/>
+    <include
+        android:id="@+id/toolbarEditSupplier"
+        layout="@layout/toolbar_layout_edit_supplier"
+        />
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
 
         <EditText
-            android:id="@+id/txtSupName"
+            android:id="@+id/txtEditNamaSup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:ems="10"
             android:hint="Nama Supplier" />
+
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="150dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
 
         <EditText
-            android:id="@+id/txtSupPhone"
+            android:id="@+id/txtEditPhoneSup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:ems="10"
             android:hint="Phone Supplier" />
+
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="200dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
 
         <EditText
-            android:id="@+id/txtSupAddress"
+            android:id="@+id/txtEditAlamatSup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:ems="10"
             android:hint="Alamat Supplier" />
+
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="250dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
 
         <EditText
-            android:id="@+id/txtSupCity"
+            android:id="@+id/txtEditCitySup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:ems="10"
             android:hint="Kota Supplier" />
+
     </android.support.design.widget.TextInputLayout>
 
-
-</LinearLayout>
+</RelativeLayout>

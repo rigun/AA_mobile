@@ -2,6 +2,7 @@ package e.abimuliawans.p3l_mobile;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -101,11 +102,16 @@ public class LoginActivity extends AppCompatActivity {
                     {
                         dialog.dismiss();
                         token = response.body().getToken();
+
+                        //Save Token
+                        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyToken", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("token_access", token);
+                        editor.commit();
+
                         Toasty.success(LoginActivity.this, "Login Success",
                                 Toast.LENGTH_SHORT, true).show();
-
                         Intent i = new Intent(LoginActivity.this,DasboardActivity.class);
-                        i.putExtra("token",token);
                         startActivity(i);
                     }
                     else{

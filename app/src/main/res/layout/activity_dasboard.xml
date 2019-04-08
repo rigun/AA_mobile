@@ -238,35 +238,94 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btnMenuVehicle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="100dp"
-            android:layout_marginRight="20dp"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="90dp"
+            android:backgroundTint="@color/colorPrimary"
             android:src="@drawable/ic_motor"
+            android:visibility="invisible"
             app:elevation="6dp"
             app:fabSize="normal"
-            app:pressedTranslationZ="12dp"
-            android:backgroundTint="@color/colorPrimary"
-            android:visibility="invisible"
-            android:id="@+id/btnMenuVehicle"/>
+            app:pressedTranslationZ="12dp" />
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btnMenuLogOut"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="140dp"
+            android:backgroundTint="#FF6347"
+            android:src="@drawable/ic_exit"
+            android:visibility="invisible"
+            app:elevation="6dp"
+            app:fabSize="normal"
+            app:pressedTranslationZ="12dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btnMenuLainya"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
             android:src="@drawable/ic_apps_white"
             app:elevation="6dp"
             app:fabSize="normal"
-            app:pressedTranslationZ="12dp"
-            android:id="@+id/btnMenuLainya"/>
+            app:pressedTranslationZ="12dp" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardViewFab1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="70dp"
+            android:visibility="invisible"
+            android:layout_marginBottom="100dp"
+            app:cardCornerRadius="10dp">
+
+            <TextView
+                android:id="@+id/txtFab1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text=" Kendaraan " />
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardViewFab2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="70dp"
+            android:visibility="invisible"
+            android:layout_marginBottom="160dp"
+            app:cardCornerRadius="10dp">
+
+            <TextView
+                android:id="@+id/txtFab2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text=" Log Out " />
+
+        </android.support.v7.widget.CardView>
 
     </RelativeLayout>
 
