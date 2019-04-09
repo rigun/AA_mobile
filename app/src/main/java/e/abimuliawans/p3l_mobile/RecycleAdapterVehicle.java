@@ -41,7 +41,6 @@ public class RecycleAdapterVehicle extends RecyclerView.Adapter<RecycleAdapterVe
     private Context context;
 
 
-
     public RecycleAdapterVehicle(Context context,List<VehicleDAO> result) {
         this.context = context;
         this.result = result;

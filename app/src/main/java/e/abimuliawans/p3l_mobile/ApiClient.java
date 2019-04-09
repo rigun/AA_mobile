@@ -3,7 +3,10 @@ package e.abimuliawans.p3l_mobile;
 import android.content.Intent;
 
 import java.util.List;
+import java.util.Map;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.DELETE;
@@ -11,7 +14,10 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -63,5 +69,17 @@ public interface ApiClient {
 
     @GET("sparepart")
     Call<List<SparepartDAO>> getSparepart();
+
+    @POST("sparepart")
+    @FormUrlEncoded
+    Call<SparepartDAO> addSparepart(@Field("code") String code,
+                                    @Field("name") String name,
+                                    @Field("merk") String merk,
+                                    @Field("type") String type,
+                                    @Field("supplier_id") String supID,
+                                    @Field("vehicles") String vehID,
+                                    @Field("picture") String picture);
+
+
 
 }

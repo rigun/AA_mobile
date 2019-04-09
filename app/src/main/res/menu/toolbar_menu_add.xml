@@ -8,6 +8,7 @@
         android:title="Tambah"
         android:id="@+id/action_edit"
         android:icon="@drawable/icadd2"
+        android:onClick="actionClickAdd"
         app:showAsAction="ifRoom|collapseActionView"
         />
 </menu>

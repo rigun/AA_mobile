@@ -41,9 +41,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class VehicleActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
-    FloatingActionButton floatingActionButton;
-    EditText txtMerkVeh, txtTipeVeh;
-    Button btnTambahVeh;
+    private FloatingActionButton floatingActionButton;
+    private EditText txtMerkVeh, txtTipeVeh;
+    private Button btnTambahVeh;
 
     private List<VehicleDAO> mListVehicle = new ArrayList<>();
     private RecyclerView recyclerView;
@@ -145,6 +145,7 @@ public class VehicleActivity extends AppCompatActivity implements SearchView.OnQ
                 LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(VehicleActivity.this,R.anim.layout_anim_recycle);
                 recyclerView.setLayoutAnimation(animationController);
                 List<VehicleDAO> vehicleDAOList = response.body();
+
                 recycleAdapterVehicle.notifyDataSetChanged();
                 recycleAdapterVehicle=new RecycleAdapterVehicle(VehicleActivity.this,vehicleDAOList);
                 recyclerView.setAdapter(recycleAdapterVehicle);

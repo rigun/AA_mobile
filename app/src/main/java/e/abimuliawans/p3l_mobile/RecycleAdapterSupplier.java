@@ -94,7 +94,7 @@ public class RecycleAdapterSupplier extends RecyclerView.Adapter<RecycleAdapterS
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //Tambah Sparepart
-                                Intent intent = new Intent(context,TambahSparepartActivity.class);
+                                Intent intent = new Intent(context,PilihKendaraanSpar.class);
                                 context.startActivity(intent);
                             }
                         }
