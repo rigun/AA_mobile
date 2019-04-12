@@ -21,9 +21,9 @@ public class DasboardActivity extends AppCompatActivity {
     private Animation atg, atgtwo, atgthree, fabOpen, fabClose, fabClockwise, fabAntiClockwise
             ,cardOpen,cardClose;
     private TextView pagetitle,pagesubtitle,txtFab;
-    private CardView cardViewVeh,cardViewLogout;
+    private CardView cardViewVeh,cardViewLogout,cardViewSales;
     private ImageView imageView3,imgSparepart,imgSupplier, imgPemesanan;
-    private FloatingActionButton fabMenuLainya,fabVehicle,fabLogout;
+    private FloatingActionButton fabMenuLainya,fabVehicle,fabLogout,fabSales;
     private String token;
     private boolean isOpen = false;
 
@@ -76,13 +76,15 @@ public class DasboardActivity extends AppCompatActivity {
         pagetitle = findViewById(R.id.pagetitle);
         pagesubtitle = findViewById(R.id.pagesubtitle);
         imageView3 = findViewById(R.id.imageView3);
-        txtFab= findViewById(R.id.txtFab1);
+
         cardViewVeh = findViewById(R.id.cardViewFab1);
         cardViewLogout = findViewById(R.id.cardViewFab2);
+        cardViewSales = findViewById(R.id.cardViewFab3);
 
         fabMenuLainya= findViewById(R.id.btnMenuLainya);
         fabVehicle= findViewById(R.id.btnMenuVehicle);
         fabLogout= findViewById(R.id.btnMenuLogOut);
+        fabSales = findViewById(R.id.btnMenuSales);
 
 
         // Pass an animation
@@ -103,6 +105,10 @@ public class DasboardActivity extends AppCompatActivity {
                     fabLogout.startAnimation(fabClose);
                     fabLogout.setClickable(false);
                     cardViewLogout.startAnimation(cardClose);
+
+                    fabSales.startAnimation(fabClose);
+                    fabSales.setClickable(false);
+                    cardViewSales.startAnimation(cardClose);
                     isOpen=false;
                 }else
                 {
@@ -113,6 +119,10 @@ public class DasboardActivity extends AppCompatActivity {
                     fabLogout.startAnimation(fabOpen);
                     fabLogout.setClickable(true);
                     cardViewLogout.startAnimation(fabOpen);
+
+                    fabSales.startAnimation(fabOpen);
+                    fabSales.setClickable(false);
+                    cardViewSales.startAnimation(fabOpen);
                     isOpen=true;
                 }
             }

@@ -7,7 +7,7 @@
     <item
         android:title="Edit"
         android:id="@+id/action_add"
-        android:icon="@drawable/ic_edit_"
+        android:icon="@drawable/ic_save"
         android:onClick="actionClickEdit"
         app:showAsAction="ifRoom|collapseActionView"
         />

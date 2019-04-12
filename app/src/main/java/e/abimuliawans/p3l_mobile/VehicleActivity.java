@@ -220,8 +220,5 @@ public class VehicleActivity extends AppCompatActivity implements SearchView.OnQ
         return false;
     }
 
-    public void setString(String yourString){
-        stringSend = yourString;
-    }
 
 }

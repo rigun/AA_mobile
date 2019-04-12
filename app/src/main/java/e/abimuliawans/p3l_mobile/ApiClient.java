@@ -23,12 +23,12 @@ import retrofit2.http.Query;
 
 public interface ApiClient {
 
-
+    //Login
     @POST("login")
     @FormUrlEncoded
     Call<LoginResponse> loginRequest(@Field("email") String email,
                                      @Field("password") String password);
-
+    //Kendaraan
     @GET("vehicle")
     Call<List<VehicleDAO>> getVehicle();
 
@@ -36,7 +36,6 @@ public interface ApiClient {
     @FormUrlEncoded
     Call<VehicleDAO> addVehicleReq(@Field("merk") String merk,
                                    @Field("type") String type);
-
     @POST("vehicle/{id}")
     @FormUrlEncoded
     Call<VehicleDAO> updateVehicleReq(@Path("id") String idVeh,
@@ -45,6 +44,7 @@ public interface ApiClient {
     @DELETE("vehicle/{id}")
     Call<VehicleDAO> deleteVehicle(@Path("id") Integer id);
 
+    //Supplier
     @GET("personbyrole/supplier")
     Call<ValueSupplier> getSupplier();
 
@@ -66,9 +66,10 @@ public interface ApiClient {
                                         @Field("address") String address,
                                         @Field("city") String city,
                                         @Field("role") String role);
-
+    //Sparepart
     @GET("sparepart")
     Call<List<SparepartDAO>> getSparepart();
+
 
     @POST("sparepart")
     @FormUrlEncoded
@@ -79,6 +80,9 @@ public interface ApiClient {
                                     @Field("supplier_id") String supID,
                                     @Field("vehicles") String vehID,
                                     @Field("picture") String picture);
+
+    @DELETE("sparepart/{code}")
+    Call<SparepartDAO> deleteSparepart(@Path("code") String code);
 
 
 

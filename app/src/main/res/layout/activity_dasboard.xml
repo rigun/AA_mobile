@@ -249,7 +249,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:layout_marginRight="20dp"
-            android:layout_marginBottom="90dp"
+            android:layout_marginBottom="140dp"
             android:backgroundTint="@color/colorPrimary"
             android:src="@drawable/ic_motor"
             android:visibility="invisible"
@@ -264,9 +264,24 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:layout_marginRight="20dp"
-            android:layout_marginBottom="140dp"
+            android:layout_marginBottom="90dp"
             android:backgroundTint="#FF6347"
             android:src="@drawable/ic_exit"
+            android:visibility="invisible"
+            app:elevation="6dp"
+            app:fabSize="normal"
+            app:pressedTranslationZ="12dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btnMenuSales"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="190dp"
+            android:backgroundTint="#CED944"
+            android:src="@drawable/ic_sales"
             android:visibility="invisible"
             app:elevation="6dp"
             app:fabSize="normal"
@@ -302,7 +317,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text=" Kendaraan " />
+                android:text=" Log Out " />
 
         </android.support.v7.widget.CardView>
 
@@ -314,7 +329,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginRight="70dp"
             android:visibility="invisible"
-            android:layout_marginBottom="160dp"
+            android:layout_marginBottom="210dp"
             app:cardCornerRadius="10dp">
 
             <TextView
@@ -323,7 +338,28 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text=" Log Out " />
+                android:text=" Sales " />
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardViewFab3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="70dp"
+            android:visibility="invisible"
+            android:layout_marginBottom="160dp"
+            app:cardCornerRadius="10dp">
+
+            <TextView
+                android:id="@+id/txtFab3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text=" Kendaraan " />
 
         </android.support.v7.widget.CardView>
 
