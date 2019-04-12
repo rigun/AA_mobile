@@ -35,7 +35,7 @@ public class SparepartActivity extends AppCompatActivity implements SearchView.O
     private RecyclerView recyclerView;
     private RecycleAdapterSparepart recycleAdapterSparepart;
     private RecyclerView.LayoutManager layoutManager;
-    private String token;
+    private String token,BASE_URL;
     private ProgressBar progressBar;
 
     @Override
@@ -61,6 +61,7 @@ public class SparepartActivity extends AppCompatActivity implements SearchView.O
         //Pengambilan Token
         SharedPreferences pref = getApplication().getSharedPreferences("MyToken", Context.MODE_PRIVATE);
         token = pref.getString("token_access", null);
+        BASE_URL = pref.getString("BASE_URL",null);
 
         //Pengecekan Bearer Token
         final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -79,7 +80,7 @@ public class SparepartActivity extends AppCompatActivity implements SearchView.O
 
     public void setRecycleViewSparepart(OkHttpClient.Builder httpClient){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api1.thekingcorp.org/")
+                .baseUrl(BASE_URL)
                 .client(httpClient.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

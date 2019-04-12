@@ -49,7 +49,7 @@ public class VehicleActivity extends AppCompatActivity implements SearchView.OnQ
     private RecyclerView recyclerView;
     private RecycleAdapterVehicle recycleAdapterVehicle;
     private RecyclerView.LayoutManager layoutManager;
-    private String token,inputMerk,inputType,stringSend;
+    private String token,inputMerk,inputType,stringSend,BASE_URL;
     private ProgressBar progressBar;
 
     @Override
@@ -76,6 +76,7 @@ public class VehicleActivity extends AppCompatActivity implements SearchView.OnQ
         //Pengambilan Token
         SharedPreferences pref = getApplication().getSharedPreferences("MyToken", Context.MODE_PRIVATE);
         token = pref.getString("token_access", null);
+        BASE_URL = pref.getString("BASE_URL",null);
 
 
         //Pengecekan Bearer Token
@@ -131,7 +132,7 @@ public class VehicleActivity extends AppCompatActivity implements SearchView.OnQ
     public void setRecycleViewVehicle(OkHttpClient.Builder httpClient){
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api1.thekingcorp.org/")
+                .baseUrl(BASE_URL)
                 .client(httpClient.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -164,7 +165,7 @@ public class VehicleActivity extends AppCompatActivity implements SearchView.OnQ
     public void addNewVehicle(final OkHttpClient.Builder httpClient){
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api1.thekingcorp.org/")
+                .baseUrl(BASE_URL)
                 .client(httpClient.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

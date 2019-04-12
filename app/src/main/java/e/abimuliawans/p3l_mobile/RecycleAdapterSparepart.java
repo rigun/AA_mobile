@@ -69,7 +69,7 @@ public class RecycleAdapterSparepart extends RecyclerView.Adapter<RecycleAdapter
 
     @Override
     public void onBindViewHolder(final RecycleAdapterSparepart.MyViewHolder myViewHolder, int i){
-        SparepartDAO spr = result.get(i);
+        final SparepartDAO spr = result.get(i);
         myViewHolder.nameSparepart.setText(spr.getNamaSparepart());
         myViewHolder.codeSparepart.setText(spr.getCodeSparepart());
         myViewHolder.typeSparepart.setText(spr.getTypeSparepart());
@@ -89,6 +89,7 @@ public class RecycleAdapterSparepart extends RecyclerView.Adapter<RecycleAdapter
         //Get Token
         SharedPreferences pref = context.getSharedPreferences("MyToken", MODE_PRIVATE);
         final String token = pref.getString("token_access", null);
+        final String BASE_URL = pref.getString("BASE_URL",null);
 
         myViewHolder.cardSparepart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +114,12 @@ public class RecycleAdapterSparepart extends RecyclerView.Adapter<RecycleAdapter
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //Edit
+                                Intent intent = new Intent(context,EditSparepartActivity.class);
+                                intent.putExtra("code",spr.getCodeSparepart());
+                                intent.putExtra("name",spr.getNamaSparepart());
+                                intent.putExtra("merk",spr.getMerkSparepart());
+                                intent.putExtra("type",spr.getTypeSparepart());
+                                context.startActivity(intent);
                             }
                         });
 
@@ -134,7 +141,7 @@ public class RecycleAdapterSparepart extends RecyclerView.Adapter<RecycleAdapter
                                 });
 
                                 Retrofit retrofit = new Retrofit.Builder()
-                                        .baseUrl("https://api1.thekingcorp.org/")
+                                        .baseUrl(BASE_URL)
                                         .client(httpClient.build())
                                         .addConverterFactory(GsonConverterFactory.create())
                                         .build();

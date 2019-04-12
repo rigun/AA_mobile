@@ -84,6 +84,15 @@ public interface ApiClient {
     @DELETE("sparepart/{code}")
     Call<SparepartDAO> deleteSparepart(@Path("code") String code);
 
+    @POST("sparepart/{code}")
+    @FormUrlEncoded
+    Call<SparepartDAO> updateSparepart(@Path("code") String code,
+                                       @Field("name") String name,
+                                       @Field("merk") String merk,
+                                       @Field("type") String type,
+                                       @Field("supplier_id") String supplierID,
+                                       @Field("vehicles") String vehiclesID);
+
 
 
 }

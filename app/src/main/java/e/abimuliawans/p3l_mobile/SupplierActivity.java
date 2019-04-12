@@ -42,7 +42,7 @@ public class SupplierActivity extends AppCompatActivity implements SearchView.On
     private RecyclerView recyclerView;
     private RecycleAdapterSupplier recycleAdapterSupplier;
     private RecyclerView.LayoutManager layoutManager;
-    private String token,inputNama,inputPhone,inputCity,inputAddress;
+    private String token,inputNama,inputPhone,inputCity,inputAddress,BASE_URL;
     private FloatingActionButton floatingActionButton;
     private EditText txtNameSup,txtPhoneSup,txtCitySup,txtAddressSup;
     private ProgressBar progressBar;
@@ -55,6 +55,7 @@ public class SupplierActivity extends AppCompatActivity implements SearchView.On
         //Pengambilan Token
         SharedPreferences pref = getApplication().getSharedPreferences("MyToken", Context.MODE_PRIVATE);
         token = pref.getString("token_access", null);
+        BASE_URL = pref.getString("BASE_URL",null);
 
         //Inisialisasi Progres Bar
         progressBar = findViewById(R.id.progress_bar_supplier);
@@ -129,7 +130,7 @@ public class SupplierActivity extends AppCompatActivity implements SearchView.On
     public void setRecycleViewSupplier(OkHttpClient.Builder httpClient){
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api1.thekingcorp.org/")
+                .baseUrl(BASE_URL)
                 .client(httpClient.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -160,7 +161,7 @@ public class SupplierActivity extends AppCompatActivity implements SearchView.On
     public void addNewSupplier(final OkHttpClient.Builder httpClient){
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api1.thekingcorp.org/")
+                .baseUrl(BASE_URL)
                 .client(httpClient.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

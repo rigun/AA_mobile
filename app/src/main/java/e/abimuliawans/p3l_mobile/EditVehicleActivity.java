@@ -27,7 +27,7 @@ public class EditVehicleActivity extends AppCompatActivity {
 
     private EditText txtType;
     private EditText txtMerk;
-    private String setType,setMerk,setID,token;
+    private String setType,setMerk,setID,token,BASE_URL;
     private OkHttpClient.Builder httpClientVeh;
 
     @Override
@@ -46,6 +46,7 @@ public class EditVehicleActivity extends AppCompatActivity {
         //Pengambilan Token
         SharedPreferences pref = getApplication().getSharedPreferences("MyToken", Context.MODE_PRIVATE);
         token = pref.getString("token_access", null);
+        BASE_URL = pref.getString("BASE_URL",null);
 
         //Pengambilan Data Kendaraaan
         SharedPreferences prefVeh = getApplication().getSharedPreferences("MyVehicle", Context.MODE_PRIVATE);
@@ -88,7 +89,7 @@ public class EditVehicleActivity extends AppCompatActivity {
 
     public void updateDataVehicle(OkHttpClient.Builder httpClient) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api1.thekingcorp.org/")
+                .baseUrl(BASE_URL)
                 .client(httpClient.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

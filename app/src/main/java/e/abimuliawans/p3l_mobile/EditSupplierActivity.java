@@ -26,7 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class EditSupplierActivity extends AppCompatActivity {
 
     private EditText txtNamaSup,txtAddressSup,txtCitySup,txtPhoneSup;
-    private String token,setNama,setAddress,setCity,setPhone,setId;
+    private String token,setNama,setAddress,setCity,setPhone,setId,BASE_URL;
     private Integer inputId;
     private OkHttpClient.Builder httpClientSup;
 
@@ -48,6 +48,7 @@ public class EditSupplierActivity extends AppCompatActivity {
         //Pengambilan Token
         SharedPreferences pref = getApplication().getSharedPreferences("MyToken", Context.MODE_PRIVATE);
         token = pref.getString("token_access", null);
+        BASE_URL = pref.getString("BASE_URL",null);
 
         //Pengambilan Data Supplier
         SharedPreferences prefSub = getApplication().getSharedPreferences("MySupplier", Context.MODE_PRIVATE);
@@ -97,7 +98,7 @@ public class EditSupplierActivity extends AppCompatActivity {
 
     public void updateDataSupplier(OkHttpClient.Builder httpClient) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api1.thekingcorp.org/")
+                .baseUrl(BASE_URL)
                 .client(httpClient.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

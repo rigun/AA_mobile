@@ -50,7 +50,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class TambahSparepartActivity extends AppCompatActivity {
     private TextView idSupplier,idVehicle;
     private ImageView imageAddSpa;
-    private String setIdSup,token,id,txtNoCode,txtLetak,txtRuang,inputCodeSpare;
+    private String setIdSup,token,id,txtNoCode,txtLetak,txtRuang,inputCodeSpare,BASE_URL;
     private EditText codeSpare,nameSpare,merkSpare,typeSpare;
     private OkHttpClient.Builder httpClientAdd;
     private Bitmap bitmap;
@@ -92,6 +92,7 @@ public class TambahSparepartActivity extends AppCompatActivity {
         //Pengambilan Token
         SharedPreferences pref = getApplication().getSharedPreferences("MyToken", Context.MODE_PRIVATE);
         token = pref.getString("token_access", null);
+        BASE_URL = pref.getString("BASE_URL",null);
 
         //Ambil Data Kendaraan
         Bundle bundle = getIntent().getExtras();
@@ -179,7 +180,7 @@ public class TambahSparepartActivity extends AppCompatActivity {
         }
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api1.thekingcorp.org/")
+                .baseUrl(BASE_URL)
                 .client(httpClient.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

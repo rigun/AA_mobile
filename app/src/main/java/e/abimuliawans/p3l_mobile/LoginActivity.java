@@ -107,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyToken", MODE_PRIVATE);
                         SharedPreferences.Editor editor = pref.edit();
                         editor.putString("token_access", token);
+                        editor.putString("BASE_URL","https://api1.thekingcorp.org/");
                         editor.commit();
 
                         Toasty.success(LoginActivity.this, "Login Success",

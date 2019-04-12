@@ -68,6 +68,7 @@ public class RecycleAdapterVehicle extends RecyclerView.Adapter<RecycleAdapterVe
         //Get Token
         SharedPreferences pref = context.getSharedPreferences("MyToken", MODE_PRIVATE);
         final String token = pref.getString("token_access", null);
+        final String BASE_URL = pref.getString("BASE_URL",null);
 
         myViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,7 +123,7 @@ public class RecycleAdapterVehicle extends RecyclerView.Adapter<RecycleAdapterVe
                                 });
 
                                 Retrofit retrofit = new Retrofit.Builder()
-                                        .baseUrl("https://api1.thekingcorp.org/")
+                                        .baseUrl(BASE_URL)
                                         .client(httpClient.build())
                                         .addConverterFactory(GsonConverterFactory.create())
                                         .build();
