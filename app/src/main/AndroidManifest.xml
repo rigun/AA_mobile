@@ -13,7 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EditSparepartActivity"></activity>
+        <activity android:name=".EditSalesActivity"></activity>
+        <activity android:name=".SalesActivity" />
+        <activity android:name=".EditSparepartActivity" />
         <activity android:name=".PilihKendaraanSpar" />
         <activity android:name=".TambahSparepartActivity" />
         <activity android:name=".EditSupplierActivity" />

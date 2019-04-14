@@ -200,7 +200,7 @@ public class RecycleAdapterSparepart extends RecyclerView.Adapter<RecycleAdapter
             merkSparepart=(TextView) itemView.findViewById(R.id.merkSparepart);
             typeSparepart=(TextView) itemView.findViewById(R.id.typeSparepart);
             gambarSpart=(ImageView) itemView.findViewById(R.id.gambarSparepart);
-            cardSparepart= (CardView) itemView.findViewById(R.id.cardSparepart);
+            cardSparepart=(CardView) itemView.findViewById(R.id.cardSparepart);
         }
 
         @Override
@@ -244,7 +244,5 @@ public class RecycleAdapterSparepart extends RecyclerView.Adapter<RecycleAdapter
             notifyDataSetChanged();
         }
     };
-
-
 
 }

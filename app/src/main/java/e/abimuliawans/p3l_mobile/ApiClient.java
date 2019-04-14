@@ -93,6 +93,30 @@ public interface ApiClient {
                                        @Field("supplier_id") String supplierID,
                                        @Field("vehicles") String vehiclesID);
 
+    //Cities
+    @GET("cities")
+    Call<List<CitiesDAO>> getCities();
+
+
+    //Sales
+    @GET("personbyrole/sales")
+    Call<ValueSales> getSales();
+
+    @POST("personbyrole/sales")
+    @FormUrlEncoded
+    Call<SalesDAO> addSalesReq(@Field("name") String name,
+                               @Field("phoneNumber") String phone,
+                               @Field("address") String address,
+                               @Field("city") String city);
+
+    @POST("updateperson/{id}")
+    @FormUrlEncoded
+    Call<SalesDAO> updateSalesReg(@Path("id") Integer id,
+                                  @Field("name") String name,
+                                  @Field("phoneNumber") String phone,
+                                  @Field("address") String address,
+                                  @Field("city") String city,
+                                  @Field("role") String role);
 
 
 }

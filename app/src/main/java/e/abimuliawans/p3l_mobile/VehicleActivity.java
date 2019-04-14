@@ -95,7 +95,7 @@ public class VehicleActivity extends AppCompatActivity implements SearchView.OnQ
 
         //Floating Button
         floatingActionButton=findViewById(R.id.btnAdd);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+        floatingActionButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(VehicleActivity.this);

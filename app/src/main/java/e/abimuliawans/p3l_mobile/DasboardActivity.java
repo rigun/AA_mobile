@@ -121,7 +121,7 @@ public class DasboardActivity extends AppCompatActivity {
                     cardViewLogout.startAnimation(fabOpen);
 
                     fabSales.startAnimation(fabOpen);
-                    fabSales.setClickable(false);
+                    fabSales.setClickable(true);
                     cardViewSales.startAnimation(fabOpen);
                     isOpen=true;
                 }
@@ -149,8 +149,14 @@ public class DasboardActivity extends AppCompatActivity {
             }
         });
 
+        fabSales.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DasboardActivity.this,SalesActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
-
 
 }
