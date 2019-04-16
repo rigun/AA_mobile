@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SalesActivity">
+    tools:context=".KomsumenActivity">
 
     <include
-        android:id="@+id/toolbarSales"
-        layout="@layout/toolbar_layout_sales"
+        android:id="@+id/toolbarSupplier"
+        layout="@layout/toolbar_layout_konsumen"
         />
 
     <android.support.design.widget.FloatingActionButton
@@ -23,22 +22,22 @@
         app:elevation="6dp"
         app:fabSize="normal"
         android:clickable="true"
-        android:id="@+id/btnAddSales"/>
-
-    <ProgressBar
-        android:id="@+id/progress_bar_sales"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:indeterminate="true"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        android:id="@+id/btnAddKonsumen"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerViewSales"
+        android:id="@+id/recyclerViewKonsumen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="55dp"
         android:scrollbars="vertical">
     </android.support.v7.widget.RecyclerView>
+
+    <ProgressBar
+        android:id="@+id/progress_bar_Konsumen"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:indeterminate="true"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

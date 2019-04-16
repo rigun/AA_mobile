@@ -63,6 +63,8 @@ public class SupplierActivity extends AppCompatActivity implements SearchView.On
         //Set Toolbar
         Toolbar toolbarSupplier = findViewById(R.id.toolbarSupplier);
         setSupportActionBar(toolbarSupplier);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //Inisialisasi Recycle
         recyclerView =findViewById(R.id.recyclerViewSupplier);
@@ -125,6 +127,12 @@ public class SupplierActivity extends AppCompatActivity implements SearchView.On
             }
         });
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     public void setRecycleViewSupplier(OkHttpClient.Builder httpClient){

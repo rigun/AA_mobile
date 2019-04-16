@@ -64,6 +64,8 @@ public class VehicleActivity extends AppCompatActivity implements SearchView.OnQ
         //Set Toolbar
         Toolbar toolbarSupplier = findViewById(R.id.toolbarSupplier);
         setSupportActionBar(toolbarSupplier);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //Inisialisasi Recycle
         recyclerView =findViewById(R.id.recyclerViewVehicle);
@@ -126,6 +128,12 @@ public class VehicleActivity extends AppCompatActivity implements SearchView.OnQ
         });
 
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 

@@ -118,5 +118,7 @@ public interface ApiClient {
                                   @Field("city") String city,
                                   @Field("role") String role);
 
+    @DELETE("deleteperson/{id}")
+    Call<SalesDAO> deleteSalesReq(@Path("id") Integer id);
 
 }

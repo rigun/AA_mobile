@@ -21,9 +21,9 @@ public class DasboardActivity extends AppCompatActivity {
     private Animation atg, atgtwo, atgthree, fabOpen, fabClose, fabClockwise, fabAntiClockwise
             ,cardOpen,cardClose;
     private TextView pagetitle,pagesubtitle,txtFab;
-    private CardView cardViewVeh,cardViewLogout,cardViewSales;
+    private CardView cardViewVeh,cardViewLogout,cardViewSales,cardViewKonsumen;
     private ImageView imageView3,imgSparepart,imgSupplier, imgPemesanan;
-    private FloatingActionButton fabMenuLainya,fabVehicle,fabLogout,fabSales;
+    private FloatingActionButton fabMenuLainya,fabVehicle,fabLogout,fabSales,fabKonsumen;
     private String token;
     private boolean isOpen = false;
 
@@ -80,12 +80,13 @@ public class DasboardActivity extends AppCompatActivity {
         cardViewVeh = findViewById(R.id.cardViewFab1);
         cardViewLogout = findViewById(R.id.cardViewFab2);
         cardViewSales = findViewById(R.id.cardViewFab3);
+        cardViewKonsumen = findViewById(R.id.cardViewFab4);
 
         fabMenuLainya= findViewById(R.id.btnMenuLainya);
         fabVehicle= findViewById(R.id.btnMenuVehicle);
         fabLogout= findViewById(R.id.btnMenuLogOut);
         fabSales = findViewById(R.id.btnMenuSales);
-
+        fabKonsumen = findViewById(R.id.btnMenuKonsu);
 
         // Pass an animation
         imageView3.startAnimation(atg);
@@ -109,6 +110,10 @@ public class DasboardActivity extends AppCompatActivity {
                     fabSales.startAnimation(fabClose);
                     fabSales.setClickable(false);
                     cardViewSales.startAnimation(cardClose);
+
+                    fabKonsumen.startAnimation(fabClose);
+                    fabKonsumen.setClickable(false);
+                    cardViewKonsumen.setAnimation(cardClose);
                     isOpen=false;
                 }else
                 {
@@ -118,11 +123,15 @@ public class DasboardActivity extends AppCompatActivity {
 
                     fabLogout.startAnimation(fabOpen);
                     fabLogout.setClickable(true);
-                    cardViewLogout.startAnimation(fabOpen);
+                    cardViewLogout.startAnimation(cardOpen);
 
                     fabSales.startAnimation(fabOpen);
                     fabSales.setClickable(true);
-                    cardViewSales.startAnimation(fabOpen);
+                    cardViewSales.startAnimation(cardOpen);
+
+                    fabKonsumen.startAnimation(fabOpen);
+                    fabKonsumen.setClickable(true);
+                    cardViewKonsumen.setAnimation(cardOpen);
                     isOpen=true;
                 }
             }
@@ -153,6 +162,14 @@ public class DasboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DasboardActivity.this,SalesActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        fabKonsumen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DasboardActivity.this,KomsumenActivity.class);
                 startActivity(intent);
             }
         });

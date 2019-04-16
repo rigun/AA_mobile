@@ -49,6 +49,8 @@ public class SparepartActivity extends AppCompatActivity implements SearchView.O
         //Set Toolbar
         Toolbar toolbarSparepart = findViewById(R.id.toolbarSparepart);
         setSupportActionBar(toolbarSparepart);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //Inisialisasi Recycle
         recyclerView =findViewById(R.id.recyclerViewSparepart);
@@ -76,6 +78,12 @@ public class SparepartActivity extends AppCompatActivity implements SearchView.O
 
         // Menampilkan RecyclerView
         setRecycleViewSparepart(httpClient);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     public void setRecycleViewSparepart(OkHttpClient.Builder httpClient){

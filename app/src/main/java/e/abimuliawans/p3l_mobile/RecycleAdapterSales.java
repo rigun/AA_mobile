@@ -15,9 +15,21 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import es.dmoral.toasty.Toasty;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -102,6 +114,50 @@ public class RecycleAdapterSales extends RecyclerView.Adapter<RecycleAdapterSale
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //Delete
+                                Integer idSales = Integer.valueOf(myViewHolder.mId.getText().toString());
+
+                                final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+
+                                httpClient.addInterceptor(new Interceptor() {
+                                    @Override
+                                    public Response intercept(Chain chain) throws IOException {
+                                        Request request = chain.request().newBuilder().addHeader("Authorization", "Bearer "+token).build();
+                                        return chain.proceed(request);
+                                    }
+                                });
+
+                                Retrofit retrofit = new Retrofit.Builder()
+                                        .baseUrl(BASE_URL)
+                                        .client(httpClient.build())
+                                        .addConverterFactory(GsonConverterFactory.create())
+                                        .build();
+                                ApiClient apiClient = retrofit.create(ApiClient.class);
+                                Call<SalesDAO> salesReq = apiClient.deleteSalesReq(idSales);
+
+                                salesReq.enqueue(new Callback<SalesDAO>() {
+                                    @Override
+                                    public void onResponse(Call<SalesDAO> call, retrofit2.Response<SalesDAO> response) {
+                                        if(response.isSuccessful())
+                                        {
+                                            Toasty.success(context, "Sales Berhasil Sihapus",
+                                                    Toast.LENGTH_SHORT, true).show();
+
+                                            Intent intent = new Intent(context,DasboardActivity.class);
+                                            context.startActivity(intent);
+                                        }
+                                        else{
+
+                                            Toasty.error(context, "Gagal Menghapus Data",
+                                                    Toast.LENGTH_SHORT, true).show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<SalesDAO> call, Throwable t) {
+                                        Toasty.error(context, "Gagal Menghapus Data",
+                                                Toast.LENGTH_SHORT, true).show();
+                                    }
+                                });
                             }
                         });
 

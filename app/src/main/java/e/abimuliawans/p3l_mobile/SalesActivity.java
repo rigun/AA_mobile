@@ -67,6 +67,8 @@ public class SalesActivity extends AppCompatActivity implements SearchView.OnQue
         //Set Toolbar
         Toolbar toolbarSales = findViewById(R.id.toolbarSales);
         setSupportActionBar(toolbarSales);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //Inisialisasi Recycle
         recyclerView =findViewById(R.id.recyclerViewSales);
@@ -125,6 +127,12 @@ public class SalesActivity extends AppCompatActivity implements SearchView.OnQue
             }
         });
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     public void setRecycleViewSales(OkHttpClient.Builder httpClient){
