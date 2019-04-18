@@ -7,5 +7,38 @@
     android:layout_height="match_parent"
     tools:context=".PemesananActivity">
 
+    <include
+        android:id="@+id/toolbarPemesanan"
+        layout="@layout/toolbar_layout_pemesanan"
+        />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/icadd2"
+        app:elevation="6dp"
+        app:fabSize="normal"
+        android:clickable="true"
+        android:id="@+id/btnAddPemesanan"/>
+
+    <ProgressBar
+        android:id="@+id/progress_bar_pemesanan"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:indeterminate="true"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewPemesanan"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="55dp"
+        android:scrollbars="vertical">
+    </android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

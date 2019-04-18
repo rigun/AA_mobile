@@ -7,7 +7,7 @@
     tools:context=".KomsumenActivity">
 
     <include
-        android:id="@+id/toolbarSupplier"
+        android:id="@+id/toolbarKonsumen"
         layout="@layout/toolbar_layout_konsumen"
         />
 

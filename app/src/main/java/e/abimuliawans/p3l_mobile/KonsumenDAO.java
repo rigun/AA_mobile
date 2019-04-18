@@ -6,65 +6,65 @@ import com.google.gson.annotations.SerializedName;
 public class KonsumenDAO {
     @SerializedName("id")
     @Expose
-    public String idSupplier;
+    public String idKonsumen;
     @SerializedName("name")
     @Expose
-    public String nameSupplier;
+    public String nameKonsumen;
     @SerializedName("phoneNumber")
     @Expose
-    public String phoneSupplier;
+    public String phoneKonsumen;
     @SerializedName("address")
     @Expose
-    public String addressSupplier;
+    public String addressKonsumen;
     @SerializedName("city")
     @Expose
-    public String citySupplier;
+    public String cityKonsumen;
 
-    public KonsumenDAO(String idSupplier, String nameSupplier, String phoneSupplier, String addressSupplier, String citySupplier) {
-        this.idSupplier = idSupplier;
-        this.nameSupplier = nameSupplier;
-        this.phoneSupplier = phoneSupplier;
-        this.addressSupplier = addressSupplier;
-        this.citySupplier = citySupplier;
+    public KonsumenDAO(String idKonsumen, String nameKonsumen, String phoneKonsumen, String addressKonsumen, String cityKonsumen) {
+        this.idKonsumen = idKonsumen;
+        this.nameKonsumen = nameKonsumen;
+        this.phoneKonsumen = phoneKonsumen;
+        this.addressKonsumen = addressKonsumen;
+        this.cityKonsumen = cityKonsumen;
     }
 
-    public String getIdSupplier() {
-        return idSupplier;
+    public String getIdKonsumen() {
+        return idKonsumen;
     }
 
-    public void setIdSupplier(String idSupplier) {
-        this.idSupplier = idSupplier;
+    public void setIdKonsumen(String idKonsumen) {
+        this.idKonsumen = idKonsumen;
     }
 
-    public String getNameSupplier() {
-        return nameSupplier;
+    public String getNameKonsumen() {
+        return nameKonsumen;
     }
 
-    public void setNameSupplier(String nameSupplier) {
-        this.nameSupplier = nameSupplier;
+    public void setNameKonsumen(String nameKonsumen) {
+        this.nameKonsumen = nameKonsumen;
     }
 
-    public String getPhoneSupplier() {
-        return phoneSupplier;
+    public String getPhoneKonsumen() {
+        return phoneKonsumen;
     }
 
-    public void setPhoneSupplier(String phoneSupplier) {
-        this.phoneSupplier = phoneSupplier;
+    public void setPhoneKonsumen(String phoneKonsumen) {
+        this.phoneKonsumen = phoneKonsumen;
     }
 
-    public String getAddressSupplier() {
-        return addressSupplier;
+    public String getAddressKonsumen() {
+        return addressKonsumen;
     }
 
-    public void setAddressSupplier(String addressSupplier) {
-        this.addressSupplier = addressSupplier;
+    public void setAddressKonsumen(String addressKonsumen) {
+        this.addressKonsumen = addressKonsumen;
     }
 
-    public String getCitySupplier() {
-        return citySupplier;
+    public String getCityKonsumen() {
+        return cityKonsumen;
     }
 
-    public void setCitySupplier(String citySupplier) {
-        this.citySupplier = citySupplier;
+    public void setCityKonsumen(String cityKonsumen) {
+        this.cityKonsumen = cityKonsumen;
     }
 }

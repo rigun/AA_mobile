@@ -5,11 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditSalesActivity">
+    tools:context=".EditKonsumenActivity">
 
     <include
-        android:id="@+id/toolbarEditSales"
-        layout="@layout/toolbar_layout_edit_sales"
+        android:id="@+id/toolbarEditKonsumen"
+        layout="@layout/toolbar_layout_edit_konsumen"
         />
 
     <android.support.design.widget.TextInputLayout
@@ -20,12 +20,12 @@
         android:layout_marginRight="20dp">
 
         <EditText
-            android:id="@+id/txtEditNamaSal"
+            android:id="@+id/txtEditNamaKon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:ems="10"
-            android:hint="Nama Sales" />
+            android:hint="Nama Konsumen" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -37,14 +37,14 @@
         android:layout_marginRight="20dp">
 
         <EditText
-            android:id="@+id/txtEditPhoneSal"
+            android:id="@+id/txtEditPhoneKon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
             android:maxLength="12"
             android:layout_marginTop="20dp"
             android:ems="10"
-            android:hint="Phone Sales" />
+            android:hint="Phone Konsumen" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -56,12 +56,12 @@
         android:layout_marginRight="20dp">
 
         <EditText
-            android:id="@+id/txtEditAlamatSal"
+            android:id="@+id/txtEditAlamatKon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:ems="10"
-            android:hint="Alamat Sales" />
+            android:hint="Alamat Konsumen" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -73,7 +73,7 @@
         android:layout_marginLeft="20dp"/>
 
     <Spinner
-        android:id="@+id/spinnerCityEditSal"
+        android:id="@+id/spinnerCityEditKon"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="285dp"

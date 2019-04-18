@@ -23,12 +23,12 @@ import retrofit2.http.Query;
 
 public interface ApiClient {
 
-    //Login
+    //Login =========================================================================================
     @POST("login")
     @FormUrlEncoded
     Call<LoginResponse> loginRequest(@Field("email") String email,
                                      @Field("password") String password);
-    //Kendaraan
+    //Kendaraan =====================================================================================
     @GET("vehicle")
     Call<List<VehicleDAO>> getVehicle();
 
@@ -44,7 +44,7 @@ public interface ApiClient {
     @DELETE("vehicle/{id}")
     Call<VehicleDAO> deleteVehicle(@Path("id") Integer id);
 
-    //Supplier
+    //Supplier ======================================================================================
     @GET("personbyrole/supplier")
     Call<ValueSupplier> getSupplier();
 
@@ -66,7 +66,7 @@ public interface ApiClient {
                                         @Field("address") String address,
                                         @Field("city") String city,
                                         @Field("role") String role);
-    //Sparepart
+    //Sparepart =====================================================================================
     @GET("sparepart")
     Call<List<SparepartDAO>> getSparepart();
 
@@ -93,12 +93,12 @@ public interface ApiClient {
                                        @Field("supplier_id") String supplierID,
                                        @Field("vehicles") String vehiclesID);
 
-    //Cities
+    //Cities ========================================================================================
     @GET("cities")
     Call<List<CitiesDAO>> getCities();
 
 
-    //Sales
+    //Sales =========================================================================================
     @GET("personbyrole/sales")
     Call<ValueSales> getSales();
 
@@ -120,5 +120,31 @@ public interface ApiClient {
 
     @DELETE("deleteperson/{id}")
     Call<SalesDAO> deleteSalesReq(@Path("id") Integer id);
+
+
+    //Konsumen ======================================================================================
+    @GET("personbyrole/konsumen")
+    Call<ValueKonsumen> getKonsumen();
+
+    @POST("personbyrole/konsumen")
+    @FormUrlEncoded
+    Call<KonsumenDAO> addKonsumenReq(@Field("name") String name,
+                               @Field("phoneNumber") String phone,
+                               @Field("address") String address,
+                               @Field("city") String city);
+
+    @POST("updateperson/{id}")
+    @FormUrlEncoded
+    Call<KonsumenDAO> updateKonsumenReg(@Path("id") Integer id,
+                                  @Field("name") String name,
+                                  @Field("phoneNumber") String phone,
+                                  @Field("address") String address,
+                                  @Field("city") String city,
+                                  @Field("role") String role);
+
+    @DELETE("deleteperson/{id}")
+    Call<KonsumenDAO> deleteKonsumenReq(@Path("id") Integer id);
+
+
 
 }

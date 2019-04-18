@@ -103,7 +103,7 @@ public class LoginActivity extends AppCompatActivity {
                         dialog.dismiss();
                         token = response.body().getToken();
 
-                        //Save Token
+                        //Save Token and URL
                         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyToken", MODE_PRIVATE);
                         SharedPreferences.Editor editor = pref.edit();
                         editor.putString("token_access", token);
@@ -124,8 +124,9 @@ public class LoginActivity extends AppCompatActivity {
 
                 public void onFailure(Call<LoginResponse> call, Throwable t)
                 {
-                    Log.d("TAG", t.toString());
-                    Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                    Toasty.error(LoginActivity.this, "Network Not Connected",
+                            Toast.LENGTH_SHORT, true).show();
                 }
             });
         }
