@@ -13,7 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EditKonsumenActivity"></activity>
+        <activity android:name=".SparepartCabangActivity"></activity>
+        <activity android:name=".CabangActivity" />
+        <activity android:name=".EditKonsumenActivity" />
         <activity android:name=".KomsumenActivity" />
         <activity android:name=".EditSalesActivity" />
         <activity android:name=".SalesActivity" />

@@ -146,5 +146,7 @@ public interface ApiClient {
     Call<KonsumenDAO> deleteKonsumenReq(@Path("id") Integer id);
 
 
-
+    //Cabang ========================================================================================
+    @GET("branch")
+    Call<List<CabangDAO>> getCabang();
 }
