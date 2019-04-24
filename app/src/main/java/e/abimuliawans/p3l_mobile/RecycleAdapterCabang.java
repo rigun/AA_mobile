@@ -1,6 +1,8 @@
 package e.abimuliawans.p3l_mobile;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +14,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class RecycleAdapterCabang extends RecyclerView.Adapter<RecycleAdapterCabang.MyViewHolder>  {
 
@@ -41,6 +45,21 @@ public class RecycleAdapterCabang extends RecyclerView.Adapter<RecycleAdapterCab
         CabangDAO cab = result.get(i);
         myViewHolder.mId.setText(cab.getIdCabang());
         myViewHolder.mName.setText(cab.getNamaCabang());
+
+        myViewHolder.cardViewCabang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Save Asset Order
+                SharedPreferences prefSupplier = context.getSharedPreferences("MyOrder", MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefSupplier.edit();
+                editor.putString("idCabang", myViewHolder.mId.getText().toString());
+                editor.commit();
+
+                Intent intent = new Intent(context,SupplierOrderActivity.class);
+                context.startActivity(intent);
+            }
+        });
+
     }
 
     @Override
@@ -57,7 +76,7 @@ public class RecycleAdapterCabang extends RecyclerView.Adapter<RecycleAdapterCab
             super(itemView);
             mName=itemView.findViewById(R.id.nameCabang);
             mId=itemView.findViewById(R.id.idCabang);
-           cardViewCabang=itemView.findViewById(R.id.cardViewAdapterCabang);
+            cardViewCabang=itemView.findViewById(R.id.cardViewAdapterCabang);
         }
 
         @Override

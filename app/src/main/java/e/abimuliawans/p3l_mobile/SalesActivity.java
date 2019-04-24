@@ -93,7 +93,7 @@ public class SalesActivity extends AppCompatActivity implements SearchView.OnQue
         setRecycleViewSales(httpClient);
 
         //Floating Button
-        floatingActionButton=findViewById(R.id.btnAddKonsumen);
+        floatingActionButton=findViewById(R.id.btnAddSales);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

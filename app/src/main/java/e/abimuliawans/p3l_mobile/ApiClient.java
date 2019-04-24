@@ -70,6 +70,9 @@ public interface ApiClient {
     @GET("sparepart")
     Call<List<SparepartDAO>> getSparepart();
 
+    @GET("sparepartBySupplier/{supplierId}")
+    Call<List<SparepartDAO>> getSparepartBySupplier(@Path("supplierId") Integer idSupplier);
+
 
     @POST("sparepart")
     @FormUrlEncoded
@@ -149,4 +152,17 @@ public interface ApiClient {
     //Cabang ========================================================================================
     @GET("branch")
     Call<List<CabangDAO>> getCabang();
+
+    //Order ========================================================================================
+    @POST("order")
+    @FormUrlEncoded
+    Call<OrderDAO> addOrder(@Field("supplier_id") Integer idSupplier,
+                            @Field("branch_id") Integer idCabang,
+                            @Field("sparepart_code") String code,
+                            @Field("unit") String unit,
+                            @Field("total") Integer total);
+
+    @GET("sparepartBS/{idSupplier}/{idCabang}")
+    Call<ValueDataOrder> getPemesanan(@Path("idSupplier") Integer idSupplier,
+                                      @Path("idCabang") Integer idCabang);
 }

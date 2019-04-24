@@ -3,7 +3,6 @@ package e.abimuliawans.p3l_mobile;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -28,43 +27,48 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class PemesananActivity extends AppCompatActivity {
+public class SparepartBySupActivity extends AppCompatActivity {
 
-    private List<OrderDataDAO> mListOrder = new ArrayList<>();
+    private List<SparepartDAO> mListSparepart = new ArrayList<>();
     private RecyclerView recyclerView;
-    private RecycleAdapterPemesanan recycleAdapterPemesanan;
+    private RecycleAdapterSparepartBySup recycleAdapterSparepartBySup;
     private RecyclerView.LayoutManager layoutManager;
-    private RecyclerView recyclerViewPemesanan;
+    private String token,BASE_URL,idSupplier,idCabang;
     private ProgressBar progressBar;
-    private FloatingActionButton floatingActionButton;
-    private String token,BASE_URL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pemesanan);
+        setContentView(R.layout.activity_sparepart_by_sup);
 
         //Inisialisasi Progres Bar
-        progressBar = findViewById(R.id.progress_bar_pemesanan);
+        progressBar = findViewById(R.id.progress_bar_sparepart_by_sup);
 
         //Set Toolbar
-        Toolbar toolbarPemesanan = findViewById(R.id.toolbarPemesanan);
-        setSupportActionBar(toolbarPemesanan);
+        Toolbar toolbarSparepart = findViewById(R.id.toolbarSparepartBySup);
+        setSupportActionBar(toolbarSparepart);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //Inisialisasi Recycle
-        recyclerView =findViewById(R.id.recyclerViewPemesanan);
-        recycleAdapterPemesanan= new RecycleAdapterPemesanan(PemesananActivity.this,mListOrder);
+        recyclerView =findViewById(R.id.recyclerViewSparepartBySup);
+        recycleAdapterSparepartBySup= new RecycleAdapterSparepartBySup(SparepartBySupActivity.this,mListSparepart);
         RecyclerView.LayoutManager mLayoutManager= new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(recycleAdapterPemesanan);
+        recyclerView.setAdapter(recycleAdapterSparepartBySup);
 
         //Pengambilan Token
         SharedPreferences pref = getApplication().getSharedPreferences("MyToken", Context.MODE_PRIVATE);
         token = pref.getString("token_access", null);
         BASE_URL = pref.getString("BASE_URL",null);
+
+        //Pengambilan Asset Order
+        SharedPreferences pref2 = getApplication().getSharedPreferences("MyOrder", Context.MODE_PRIVATE);
+        idSupplier = pref2.getString("idSupplier", null);
+        idCabang = pref2.getString("idCabang", null);
+        Integer idSupplierInteger = Integer.parseInt(idSupplier);
+        Integer idCabangInteger = Integer.parseInt(idCabang);
 
         //Pengecekan Bearer Token
         final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -77,27 +81,11 @@ public class PemesananActivity extends AppCompatActivity {
             }
         });
 
-        //Floating Button
-        floatingActionButton=findViewById(R.id.btnAddPemesanan);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PemesananActivity.this,CabangActivity.class);
-                startActivity(intent);
-            }
-        });
-
         // Menampilkan RecyclerView
-        setRecycleViewPemesanan(httpClient,9,2);
+        setRecycleViewSparepartBySup(httpClient,idSupplierInteger);
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
-
-    public void setRecycleViewPemesanan(OkHttpClient.Builder httpClient, int idSupplier, int idCabang) {
+    private void setRecycleViewSparepartBySup(OkHttpClient.Builder httpClient, int idSupplier) {
         //Set Data Sparepart By Supplier
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -105,24 +93,23 @@ public class PemesananActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ApiClient apiClient = retrofit.create(ApiClient.class);
-        Call<ValueDataOrder> orderCall = apiClient.getPemesanan(idSupplier,idCabang);
+        Call<List<SparepartDAO>> sparepartCall = apiClient.getSparepartBySupplier(idSupplier);
 
-        orderCall.enqueue(new Callback<ValueDataOrder>() {
+        sparepartCall.enqueue(new Callback<List<SparepartDAO>>() {
             @Override
-            public void onResponse(Call<ValueDataOrder> call, retrofit2.Response<ValueDataOrder> response) {
-                //progressBar.setVisibility(View.GONE);
-                LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(PemesananActivity.this,R.anim.layout_anim_recycle);
+            public void onResponse(Call<List<SparepartDAO>> call, retrofit2.Response<List<SparepartDAO>> response) {
+                progressBar.setVisibility(View.GONE);
+                LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(SparepartBySupActivity.this,R.anim.layout_anim_recycle);
                 recyclerView.setLayoutAnimation(animationController);
 
-                List<OrderDataDAO> lisDataOrder = response.body().getData();
-
-                recycleAdapterPemesanan.notifyDataSetChanged();
-                recycleAdapterPemesanan=new RecycleAdapterPemesanan(PemesananActivity.this,lisDataOrder);
-                recyclerView.setAdapter(recycleAdapterPemesanan);
+                List<SparepartDAO> sparepartDAOList = response.body();
+                recycleAdapterSparepartBySup.notifyDataSetChanged();
+                recycleAdapterSparepartBySup=new RecycleAdapterSparepartBySup(SparepartBySupActivity.this,sparepartDAOList);
+                recyclerView.setAdapter(recycleAdapterSparepartBySup);
             }
 
             @Override
-            public void onFailure(Call<ValueDataOrder> call, Throwable t) {
+            public void onFailure(Call<List<SparepartDAO>> call, Throwable t) {
                 //
             }
         });
