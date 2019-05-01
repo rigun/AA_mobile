@@ -43,36 +43,12 @@
         android:layout_marginLeft="275dp"
         android:text="No"/>
 
-    <Spinner
-        android:id="@+id/spinnerLetak"
-        android:entries="@array/spinnerLetak"
-        android:prompt="@array/spinnerLetak"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="110dp"
-        android:focusable="false"
-        android:layout_marginRight="230dp"
-        android:layout_marginLeft="20dp">
-    </Spinner>
-
-
-    <Spinner
-        android:id="@+id/spinnerRuang"
-        android:entries="@array/spinnerRuang"
-        android:prompt="@array/spinnerRuang"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="110dp"
-        android:layout_marginLeft="200dp"
-        android:layout_marginRight="20dp">
-
-    </Spinner>
 
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="110dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp">
 
@@ -80,8 +56,6 @@
             android:id="@+id/txtAddCodeSpare"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLength="2"
-            android:inputType="number"
             android:layout_marginTop="20dp"
             android:ems="10"
             android:hint="No Code" />
@@ -91,7 +65,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="160dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp">
 
@@ -108,7 +82,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="250dp"
+        android:layout_marginTop="210dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp">
 
@@ -125,7 +99,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="260dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp">
 
@@ -142,7 +116,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="370dp"
+        android:layout_marginTop="330dp"
         android:layout_marginLeft="20dp"
         android:text="Upload Foto :"/>
 
@@ -152,7 +126,7 @@
         android:layout_height="150dp"
         android:layout_centerHorizontal="true"
         android:src="@drawable/uploadimage"
-        android:layout_marginTop="400dp"/>
+        android:layout_marginTop="360dp"/>
 
 
 </RelativeLayout>

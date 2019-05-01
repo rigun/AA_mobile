@@ -9,7 +9,10 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
@@ -28,9 +31,9 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class PemesananActivity extends AppCompatActivity {
+public class PemesananActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
-    private List<OrderDataDAO> mListOrder = new ArrayList<>();
+    private List<ShowPemesananDAO> mListOrder = new ArrayList<>();
     private RecyclerView recyclerView;
     private RecycleAdapterPemesanan recycleAdapterPemesanan;
     private RecyclerView.LayoutManager layoutManager;
@@ -88,7 +91,7 @@ public class PemesananActivity extends AppCompatActivity {
         });
 
         // Menampilkan RecyclerView
-        setRecycleViewPemesanan(httpClient,9,2);
+        setRecycleViewPemesanan(httpClient);
     }
 
     @Override
@@ -97,7 +100,7 @@ public class PemesananActivity extends AppCompatActivity {
         return true;
     }
 
-    public void setRecycleViewPemesanan(OkHttpClient.Builder httpClient, int idSupplier, int idCabang) {
+    public void setRecycleViewPemesanan(OkHttpClient.Builder httpClient) {
         //Set Data Sparepart By Supplier
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -105,26 +108,46 @@ public class PemesananActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ApiClient apiClient = retrofit.create(ApiClient.class);
-        Call<ValueDataOrder> orderCall = apiClient.getPemesanan(idSupplier,idCabang);
+        Call<List<ShowPemesananDAO>> orderCall = apiClient.getOrder(2);
 
-        orderCall.enqueue(new Callback<ValueDataOrder>() {
+        orderCall.enqueue(new Callback<List<ShowPemesananDAO>>() {
             @Override
-            public void onResponse(Call<ValueDataOrder> call, retrofit2.Response<ValueDataOrder> response) {
-                //progressBar.setVisibility(View.GONE);
+            public void onResponse(Call<List<ShowPemesananDAO>> call, retrofit2.Response<List<ShowPemesananDAO>> response) {
+                progressBar.setVisibility(View.GONE);
                 LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(PemesananActivity.this,R.anim.layout_anim_recycle);
                 recyclerView.setLayoutAnimation(animationController);
 
-                List<OrderDataDAO> lisDataOrder = response.body().getData();
-
+                List<ShowPemesananDAO> lisDataOrder = response.body();
                 recycleAdapterPemesanan.notifyDataSetChanged();
                 recycleAdapterPemesanan=new RecycleAdapterPemesanan(PemesananActivity.this,lisDataOrder);
                 recyclerView.setAdapter(recycleAdapterPemesanan);
             }
 
             @Override
-            public void onFailure(Call<ValueDataOrder> call, Throwable t) {
+            public void onFailure(Call<List<ShowPemesananDAO>> call, Throwable t) {
                 //
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu,menu);
+
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        SearchView searchView =(SearchView) menuItem.getActionView();
+        searchView.setOnQueryTextListener(this);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        recycleAdapterPemesanan.getFilter().filter(s);
+        return false;
     }
 }

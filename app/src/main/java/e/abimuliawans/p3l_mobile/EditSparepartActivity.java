@@ -114,7 +114,10 @@ public class EditSparepartActivity extends AppCompatActivity {
                 List<VehicleDAO> vehicleDAOList = response.body();
                 for(int i=0; i < vehicleDAOList.size(); i++ ){
                     String id = vehicleDAOList.get(i).getIdVehicle();
-                    listSpinner.add(id);
+                    String nameVehicle = vehicleDAOList.get(i).getTypeVehicle();
+                    String input = id+" - "+nameVehicle;
+
+                    listSpinner.add(input);
                 }
                 listSpinner.add(0,"-SELECT ID VEHICLE-");
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(EditSparepartActivity.this,
@@ -147,7 +150,9 @@ public class EditSparepartActivity extends AppCompatActivity {
                 for(int i=0; i < supplierDAOList.size(); i++)
                 {
                     String idSup = supplierDAOList.get(i).getIdSupplier();
-                    listSpinner2.add(idSup);
+                    String nameSup = supplierDAOList.get(i).getNameSupplier();
+                    String inputSup = idSup+" - "+nameSup;
+                    listSpinner2.add(inputSup);
                 }
                 listSpinner2.add(0,"-SELECT ID SUPPLIER-");
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(EditSparepartActivity.this,
@@ -165,6 +170,12 @@ public class EditSparepartActivity extends AppCompatActivity {
 
     public void updateSparepart(OkHttpClient.Builder httpClient)
     {
+        String spinnerVehicle = spinnerSpare.getSelectedItem().toString();
+        String spinnerSupplier = spinnerSpare2.getSelectedItem().toString();
+
+        String inputVehicle = Character.toString(spinnerVehicle.charAt(0));
+        String inputSupplier = Character.toString(spinnerSupplier.charAt(0));
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(httpClient.build())
@@ -173,7 +184,7 @@ public class EditSparepartActivity extends AppCompatActivity {
         ApiClient apiClient = retrofit.create(ApiClient.class);
         Call<SparepartDAO> sparepartDAOCall = apiClient.updateSparepart(code,namaSpare.getText().toString(),
                 merkSpare.getText().toString(),typeSpare.getText().toString(),
-                spinnerSpare2.getSelectedItem().toString(),spinnerSpare.getSelectedItem().toString());
+               inputSupplier,inputVehicle);
 
         sparepartDAOCall.enqueue(new Callback<SparepartDAO>() {
             @Override

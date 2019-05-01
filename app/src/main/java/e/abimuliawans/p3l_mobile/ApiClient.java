@@ -165,4 +165,11 @@ public interface ApiClient {
     @GET("sparepartBS/{idSupplier}/{idCabang}")
     Call<ValueDataOrder> getPemesanan(@Path("idSupplier") Integer idSupplier,
                                       @Path("idCabang") Integer idCabang);
+
+    @GET("pemesanan/{idCabang}")
+    Call<List<ShowPemesananDAO>> getOrder(@Path("idCabang") Integer idCabang);
+
+    @DELETE("pemesanan/{id}")
+    Call<ShowPemesananDAO> deleteOrder(@Path("id") Integer id);
+
 }

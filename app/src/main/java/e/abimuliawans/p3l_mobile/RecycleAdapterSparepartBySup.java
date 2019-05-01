@@ -73,7 +73,7 @@ public class RecycleAdapterSparepartBySup extends RecyclerView.Adapter<RecycleAd
         requestOptions.error(R.drawable.ic_cloud_upload);
 
         Glide.with(context)
-                .load("http://10.53.15.204/images/sparepart/"+spr.getPicSparepart())
+                .load("https://api1.thekingcorp.org/images/sparepart/"+spr.getPicSparepart())
                 .apply(requestOptions)
                 .into(myViewHolder.gambarSpart);
 

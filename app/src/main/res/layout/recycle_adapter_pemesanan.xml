@@ -21,7 +21,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="26dp"
                 android:layout_marginTop="5dp"
-                android:text="ID: "
+                android:textStyle="bold"
+                android:text="ID Order: "
                 />
 
             <TextView
@@ -29,6 +30,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 android:text="No"/>
 
         </LinearLayout>
@@ -41,14 +43,14 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/sparepartCodeOrder"
+                android:id="@+id/supplierIDOrder"
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:text="Code"
-                android:textSize="20sp"
-                android:textStyle="bold"/>
+                android:textSize="16sp"
+                />
 
             <TextView
                 android:id="@+id/idCabangOrder"

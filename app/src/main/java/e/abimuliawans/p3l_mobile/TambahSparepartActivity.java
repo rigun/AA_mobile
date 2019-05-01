@@ -77,13 +77,7 @@ public class TambahSparepartActivity extends AppCompatActivity {
         merkSpare=findViewById(R.id.txtAddMerkSpare);
         typeSpare=findViewById(R.id.txtAddTypeSpare);
         imageAddSpa=findViewById(R.id.imgAddSpare);
-        spinnerLetak=findViewById(R.id.spinnerLetak);
-        spinnerRuang=findViewById(R.id.spinnerRuang);
 
-        txtLetak=spinnerLetak.getSelectedItem().toString();
-        txtRuang=spinnerRuang.getSelectedItem().toString();
-        txtNoCode=codeSpare.getText().toString();
-        inputCodeSpare=txtLetak+"-"+txtRuang+"-";
 
         //Pengambilan Data Supplier
         SharedPreferences prefSub = getApplication().getSharedPreferences("MySupplier", Context.MODE_PRIVATE);
@@ -185,7 +179,7 @@ public class TambahSparepartActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ApiClient apiClient = retrofit.create(ApiClient.class);
-        Call<SparepartDAO> sparepartDAOCall = apiClient.addSparepart(inputCodeSpare+codeSpare.getText().toString()
+        Call<SparepartDAO> sparepartDAOCall = apiClient.addSparepart(codeSpare.getText().toString()
                 ,nameSpare.getText().toString(),
                 merkSpare.getText().toString(),typeSpare.getText().toString(),setIdSup,id,imgAddSpare);
 

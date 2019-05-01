@@ -87,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
                     .setLenient()
                     .create();
             Retrofit.Builder builder=new Retrofit.
-                    Builder().baseUrl("http://10.53.15.204/auth/").
+                    Builder().baseUrl("https://api1.thekingcorp.org/auth/").
                     addConverterFactory(GsonConverterFactory.create(gson));
             Retrofit retrofit=builder.build();
             ApiClient apiClient=retrofit.create(ApiClient.class);
@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyToken", MODE_PRIVATE);
                         SharedPreferences.Editor editor = pref.edit();
                         editor.putString("token_access", token);
-                        editor.putString("BASE_URL","http://10.53.15.204/");
+                        editor.putString("BASE_URL","https://api1.thekingcorp.org/");
                         editor.commit();
 
                         Toasty.success(LoginActivity.this, "Login Success",
