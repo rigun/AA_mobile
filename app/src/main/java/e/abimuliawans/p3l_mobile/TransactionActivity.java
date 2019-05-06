@@ -7,8 +7,16 @@ import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -29,8 +37,13 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class TransactionActivity extends AppCompatActivity {
+public class TransactionActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
+    private List<TransactionByCabangDAO> mListTransaction = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private RecycleAdapterTransaction recycleAdapterTransaction;
+    private RecyclerView.LayoutManager layoutManager;
+    private RecyclerView recyclerViewTransaction;
     private String token,BASE_URL;
     private List<String> listSpinnerCity = new ArrayList<>();
     private List<String> listSpinnerCabang = new ArrayList<>();
@@ -58,6 +71,14 @@ public class TransactionActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        //Inisialisasi Recycle
+        recyclerView =findViewById(R.id.recyclerViewTransaction);
+        recycleAdapterTransaction= new RecycleAdapterTransaction(TransactionActivity.this,mListTransaction);
+        RecyclerView.LayoutManager mLayoutManager= new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(recycleAdapterTransaction);
+
         //Pengecekan Bearer Token
         final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
@@ -68,6 +89,9 @@ public class TransactionActivity extends AppCompatActivity {
                 return chain.proceed(request);
             }
         });
+
+        // Menampilkan RecyclerView
+        setRecycleViewTransaction(httpClient);
 
         floatingActionButton = findViewById(R.id.btnAddTransaction);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -181,6 +205,37 @@ public class TransactionActivity extends AppCompatActivity {
         });
     }
 
+    public void setRecycleViewTransaction(OkHttpClient.Builder httpClient)
+    {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(httpClient.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiClient apiClient = retrofit.create(ApiClient.class);
+        Call<List<TransactionByCabangDAO>> transaction = apiClient.getTransactionCabang("1");
+
+        transaction.enqueue(new Callback<List<TransactionByCabangDAO>>() {
+            @Override
+            public void onResponse(Call<List<TransactionByCabangDAO>> call, retrofit2.Response<List<TransactionByCabangDAO>> response) {
+                progressBar.setVisibility(View.GONE);
+                LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(TransactionActivity.this,R.anim.layout_anim_recycle);
+                recyclerView.setLayoutAnimation(animationController);
+                recycleAdapterTransaction.notifyDataSetChanged();
+                recycleAdapterTransaction=new RecycleAdapterTransaction(TransactionActivity.this,response.body());
+                recyclerView.setAdapter(recycleAdapterTransaction);
+
+            }
+
+            @Override
+            public void onFailure(Call<List<TransactionByCabangDAO>> call, Throwable t) {
+
+                Toasty.error(TransactionActivity.this, t.getMessage(),
+                        Toast.LENGTH_SHORT, true).show();
+            }
+        });
+    }
+
     public void addNewTransaction(final OkHttpClient.Builder httpClient){
 
         String idCabang = spinnerCabang.getSelectedItem().toString();
@@ -221,5 +276,26 @@ public class TransactionActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT, true).show();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu,menu);
+
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        SearchView searchView =(SearchView) menuItem.getActionView();
+        searchView.setOnQueryTextListener(this);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        recycleAdapterTransaction.getFilter().filter(s);
+        return false;
     }
 }

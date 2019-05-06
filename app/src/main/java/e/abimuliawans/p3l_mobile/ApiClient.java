@@ -184,4 +184,8 @@ public interface ApiClient {
                                         @Field("branch") String cabang,
                                         @Field("role") String role,
                                         @Field("jenisTransaksi") String jenisTrans);
+
+    @GET(" transactionByBranch/{branch_id}")
+    Call<List<TransactionByCabangDAO>> getTransactionCabang(@Path("branch_id") String idCabang);
+
 }
