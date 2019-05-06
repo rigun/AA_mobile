@@ -169,7 +169,19 @@ public interface ApiClient {
     @GET("pemesanan/{idCabang}")
     Call<List<ShowPemesananDAO>> getOrder(@Path("idCabang") Integer idCabang);
 
-    @DELETE("pemesanan/{id}")
-    Call<ShowPemesananDAO> deleteOrder(@Path("id") Integer id);
+    @DELETE("sparepartBS/{idSupplier}/{idCabang}")
+    Call<ShowPemesananDAO> deleteOrder(@Path("idSupplier") Integer idSupplier,
+                                       @Path("idCabang") Integer idCabang);
 
+    // Transaction ==================================================================================
+
+    @POST("transaction")
+    @FormUrlEncoded
+    Call<TransactionDAO> addTransaction(@Field("name") String name,
+                                        @Field("phoneNumber") String phone,
+                                        @Field("address") String address,
+                                        @Field("city") String city,
+                                        @Field("branch") String cabang,
+                                        @Field("role") String role,
+                                        @Field("jenisTransaksi") String jenisTrans);
 }

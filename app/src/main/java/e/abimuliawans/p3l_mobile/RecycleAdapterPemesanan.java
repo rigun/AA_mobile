@@ -58,8 +58,8 @@ public class RecycleAdapterPemesanan extends RecyclerView.Adapter<RecycleAdapter
     public void onBindViewHolder(final RecycleAdapterPemesanan.MyViewHolder myViewHolder, int i) {
         ShowPemesananDAO dataDAO = result.get(i);
         myViewHolder.mIdOrder.setText(dataDAO.getIdPemesanan());
-        myViewHolder.mIdSupplier.setText("ID Supplier : "+dataDAO.getIdSupplierPemesanan());
-        myViewHolder.mIdCabang.setText("ID Cabang : "+dataDAO.getIdCabangPemesanan());
+        myViewHolder.mIdSupplier.setText(dataDAO.getIdSupplierPemesanan());
+        myViewHolder.mIdCabang.setText(dataDAO.getIdCabangPemesanan());
         myViewHolder.mtanggal.setText("Tanggal : "+dataDAO.getTanggalPemesanan());
 
         //Get Token
@@ -80,7 +80,9 @@ public class RecycleAdapterPemesanan extends RecyclerView.Adapter<RecycleAdapter
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //Delete
-                                Integer idOrder = Integer.valueOf(myViewHolder.mIdOrder.getText().toString());
+                                Integer idSupplier = Integer.valueOf(myViewHolder.mIdSupplier.getText().toString());
+                                Integer inputIdCabang = Integer.valueOf(myViewHolder.mIdCabang.getText().toString());
+
                                 final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
                                 httpClient.addInterceptor(new Interceptor() {
@@ -97,7 +99,7 @@ public class RecycleAdapterPemesanan extends RecyclerView.Adapter<RecycleAdapter
                                         .addConverterFactory(GsonConverterFactory.create())
                                         .build();
                                 ApiClient apiClient = retrofit.create(ApiClient.class);
-                                Call<ShowPemesananDAO> pemesananDAOCall = apiClient.deleteOrder(idOrder);
+                                Call<ShowPemesananDAO> pemesananDAOCall = apiClient.deleteOrder(idSupplier,inputIdCabang);
 
                                 pemesananDAOCall.enqueue(new Callback<ShowPemesananDAO>() {
                                     @Override
@@ -133,6 +135,16 @@ public class RecycleAdapterPemesanan extends RecyclerView.Adapter<RecycleAdapter
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //Edit
+
+                            }
+                        });
+
+                builder.setNeutralButton(
+                        "Konfirmasi",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Konfirmasi
 
                             }
                         });

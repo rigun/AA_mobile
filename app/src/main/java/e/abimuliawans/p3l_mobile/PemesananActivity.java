@@ -108,7 +108,7 @@ public class PemesananActivity extends AppCompatActivity implements SearchView.O
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ApiClient apiClient = retrofit.create(ApiClient.class);
-        Call<List<ShowPemesananDAO>> orderCall = apiClient.getOrder(2);
+        Call<List<ShowPemesananDAO>> orderCall = apiClient.getOrder(1);
 
         orderCall.enqueue(new Callback<List<ShowPemesananDAO>>() {
             @Override

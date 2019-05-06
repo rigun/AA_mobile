@@ -25,4 +25,10 @@
         <item>KAYU</item>
     </string-array>
 
+    <string-array name="arrayJenisTrans">
+        <item>SS</item>
+        <item>SV</item>
+        <item>SP</item>
+    </string-array>
+
 </resources>
