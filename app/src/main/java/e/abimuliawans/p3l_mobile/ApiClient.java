@@ -185,7 +185,17 @@ public interface ApiClient {
                                         @Field("role") String role,
                                         @Field("jenisTransaksi") String jenisTrans);
 
-    @GET(" transactionByBranch/{branch_id}")
+    @GET("transactionByBranch/{branch_id}")
     Call<List<TransactionByCabangDAO>> getTransactionCabang(@Path("branch_id") String idCabang);
+
+    // Detail Transactio ============================================================================
+
+    @POST("detailTransaction")
+    @FormUrlEncoded
+    Call<TransactionDAO> addDetailTransaction(@Field("licensePlate") String noPlat,
+                                              @Field("vehicle_id") String idVehicle,
+                                              @Field("transaction_id") String idTransaction);
+    @GET("detailTransaction/{transactionId}")
+    Call<List<TransactionDetailDAO>> getTransactionDetail(@Path("transactionId") String transactionId);
 
 }

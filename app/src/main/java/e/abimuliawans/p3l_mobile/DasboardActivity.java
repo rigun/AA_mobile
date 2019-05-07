@@ -79,10 +79,17 @@ public class DasboardActivity extends AppCompatActivity {
                 spinnerCabang = mView.findViewById(R.id.spinnerPilihCabangOrder);
 
                 mBuilder.setView(mView)
-                        .setPositiveButton("Tambah", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("Pilih", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //Tambah
+                                //Ambil data ID Cabang
+                                String spinnerOrder = spinnerCabang.getSelectedItem().toString();
+                                String inputOrder = Character.toString(spinnerOrder.charAt(0));
+                                Intent intent = new Intent(DasboardActivity.this,PemesananActivity.class);
+                                intent.putExtra("idCabang", inputOrder);
+                                listSpinnerCabang.clear();
+                                spinnerCabang.setAdapter(null);
+                                startActivity(intent);
 
                             }
                         }).setNegativeButton("Batal", new DialogInterface.OnClickListener() {
@@ -96,8 +103,6 @@ public class DasboardActivity extends AppCompatActivity {
                 AlertDialog dialog = mBuilder.create();
                 dialog.show();
 
-                //Intent intent = new Intent(DasboardActivity.this,PemesananActivity.class);
-                //startActivity(intent);
             }
         });
 
@@ -125,8 +130,37 @@ public class DasboardActivity extends AppCompatActivity {
         imgTransaksi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DasboardActivity.this,TransactionActivity.class);
-                startActivity(intent);
+
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(DasboardActivity.this);
+                View mView = getLayoutInflater().inflate(R.layout.dialog_pilih_cabang,null);
+
+                loadSpinnerCabang(httpClient);
+                spinnerCabang = mView.findViewById(R.id.spinnerPilihCabangOrder);
+
+                mBuilder.setView(mView)
+                        .setPositiveButton("Pilih", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Ambil data ID Cabang
+                                String spinnerTrans = spinnerCabang.getSelectedItem().toString();
+                                String inputTrans = Character.toString(spinnerTrans.charAt(0));
+                                Intent intent = new Intent(DasboardActivity.this,TransactionActivity.class);
+                                intent.putExtra("idCabang", inputTrans);
+                                listSpinnerCabang.clear();
+                                spinnerCabang.setAdapter(null);
+                                startActivity(intent);
+                            }
+                        }).setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                                //Batal
+                    }
+                });
+
+
+                AlertDialog dialog = mBuilder.create();
+                dialog.show();
+
             }
         });
 

@@ -40,7 +40,8 @@ public class PemesananActivity extends AppCompatActivity implements SearchView.O
     private RecyclerView recyclerViewPemesanan;
     private ProgressBar progressBar;
     private FloatingActionButton floatingActionButton;
-    private String token,BASE_URL;
+    private String token,BASE_URL,inputIDcabang;
+    private Integer integerIDCabang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,11 @@ public class PemesananActivity extends AppCompatActivity implements SearchView.O
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(recycleAdapterPemesanan);
+
+        //Ambil ID Cabang
+        Bundle bundle = getIntent().getExtras();
+        inputIDcabang = bundle.getString("idCabang");
+        integerIDCabang = Integer.parseInt(inputIDcabang);
 
         //Pengambilan Token
         SharedPreferences pref = getApplication().getSharedPreferences("MyToken", Context.MODE_PRIVATE);
@@ -108,7 +114,7 @@ public class PemesananActivity extends AppCompatActivity implements SearchView.O
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ApiClient apiClient = retrofit.create(ApiClient.class);
-        Call<List<ShowPemesananDAO>> orderCall = apiClient.getOrder(1);
+        Call<List<ShowPemesananDAO>> orderCall = apiClient.getOrder(integerIDCabang);
 
         orderCall.enqueue(new Callback<List<ShowPemesananDAO>>() {
             @Override

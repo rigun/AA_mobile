@@ -44,7 +44,7 @@ public class TransactionActivity extends AppCompatActivity implements SearchView
     private RecycleAdapterTransaction recycleAdapterTransaction;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView recyclerViewTransaction;
-    private String token,BASE_URL;
+    private String token,BASE_URL,inputIDcabang;
     private List<String> listSpinnerCity = new ArrayList<>();
     private List<String> listSpinnerCabang = new ArrayList<>();
     private FloatingActionButton floatingActionButton;
@@ -78,6 +78,10 @@ public class TransactionActivity extends AppCompatActivity implements SearchView
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(recycleAdapterTransaction);
+
+        //Ambil ID Cabang
+        Bundle bundle = getIntent().getExtras();
+        inputIDcabang = bundle.getString("idCabang");
 
         //Pengecekan Bearer Token
         final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -213,7 +217,7 @@ public class TransactionActivity extends AppCompatActivity implements SearchView
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ApiClient apiClient = retrofit.create(ApiClient.class);
-        Call<List<TransactionByCabangDAO>> transaction = apiClient.getTransactionCabang("1");
+        Call<List<TransactionByCabangDAO>> transaction = apiClient.getTransactionCabang(inputIDcabang);
 
         transaction.enqueue(new Callback<List<TransactionByCabangDAO>>() {
             @Override
