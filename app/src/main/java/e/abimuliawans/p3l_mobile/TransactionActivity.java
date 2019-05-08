@@ -3,6 +3,7 @@ package e.abimuliawans.p3l_mobile;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -264,7 +265,8 @@ public class TransactionActivity extends AppCompatActivity implements SearchView
                     Toasty.success(TransactionActivity.this, "Transaksis Berhasil Ditambah",
                             Toast.LENGTH_SHORT, true).show();
 
-                    //setRecycleViewKonsumen(httpClient);
+                    Intent intent = new Intent(TransactionActivity.this,DasboardActivity.class);
+                    startActivity(intent);
                 }
                 else{
 

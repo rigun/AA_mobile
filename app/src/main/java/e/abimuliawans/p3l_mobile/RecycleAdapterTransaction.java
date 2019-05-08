@@ -160,6 +160,7 @@ public class RecycleAdapterTransaction extends RecyclerView.Adapter<RecycleAdapt
                     }
                 });
 
+
                 AlertDialog dialog = mBuilder.create();
                 dialog.show();
 
