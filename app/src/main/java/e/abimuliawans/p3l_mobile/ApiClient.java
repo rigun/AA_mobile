@@ -228,6 +228,15 @@ public interface ApiClient {
                                             @Field("total") String total,
                                             @Field("branch_id") String idCabang);
 
+    @POST("detailTSp/{tspId}")
+    @FormUrlEncoded
+    Call<TransactionDAO> editDetailSparepart(@Path("tspId") String transID,
+                                            @Field("sparepart_code") String codeSpare,
+                                            @Field("total") String total);
+
+    @DELETE("detailTSp/{tspId}")
+    Call<DetailSparepartDAO> deleteDetailSparepart(@Path("tspId") String idDetailSparepart);
+
     // Detail Layanan ===============================================================================
 
     @GET("service")

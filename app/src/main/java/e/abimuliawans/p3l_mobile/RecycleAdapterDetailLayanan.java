@@ -119,6 +119,9 @@ public class RecycleAdapterDetailLayanan extends RecyclerView.Adapter<RecycleAda
 
                                                 editDetailService(httpClient,BASE_URL,detailLayananDAO.getIdDetailLayanan(),
                                                         inputService,totalEdit.getText().toString());
+
+                                                listSpinnerIDService.clear();
+                                                spinnerIdServiceEdit.setAdapter(null);
                                             }
                                         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                     @Override
