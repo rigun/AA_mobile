@@ -40,9 +40,10 @@ public class RecycleAdapterTransaction extends RecyclerView.Adapter<RecycleAdapt
     private List<TransactionByCabangDAO> result;
     private List<TransactionByCabangDAO> listFull;
     private Context context;
-    private Spinner spinnerKedaraan;
-    private EditText platNomor;
+    private Spinner spinnerKedaraan,spinnerJenisTransEdit,spinnerCity;
+    private EditText platNomor,nameKonsumen,phoneKonsumen,alamatKonsumen;
     private List<String> listSpinnerKendaraan = new ArrayList<String>();
+    private List<String> listSpinner = new ArrayList<>();
 
     public RecycleAdapterTransaction(Context context,List<TransactionByCabangDAO> result) {
         this.context = context;
@@ -68,7 +69,7 @@ public class RecycleAdapterTransaction extends RecyclerView.Adapter<RecycleAdapt
         myViewHolder.mNumber.setText(transactionByCabangDAO.getTransactionNumber());
         myViewHolder.mService.setText("Total Service :"+transactionByCabangDAO.getTotalServices());
         myViewHolder.mSparepart.setText("Total Sparepart :"+transactionByCabangDAO.getTotalSpareparts());
-        myViewHolder.mIDCustomer.setText(transactionByCabangDAO.getCustomer_id());
+        myViewHolder.mIDCustomer.setText(transactionByCabangDAO.getKonsumenTrans().getNameKonsumen());
         myViewHolder.mPayment.setText("Payment :"+transactionByCabangDAO.getPayment());
         myViewHolder.mDiskon.setText("Diskon :"+transactionByCabangDAO.getDiskon());
 
@@ -95,10 +96,11 @@ public class RecycleAdapterTransaction extends RecyclerView.Adapter<RecycleAdapt
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
-                View mView = inflater.inflate(R.layout.dialog_option_transaction,null);
+                final View mView = inflater.inflate(R.layout.dialog_option_transaction,null);
 
                 final String idTrans2 = transactionByCabangDAO.getIdTransaction();
 
+                // Click Tambah
                 CardView tambahDetail = mView.findViewById(R.id.cardViewAddDetailTrans);
                 tambahDetail.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -143,6 +145,72 @@ public class RecycleAdapterTransaction extends RecyclerView.Adapter<RecycleAdapt
                     }
                 });
 
+                // Click Edit
+                CardView cardViewEditTransaction = mView.findViewById(R.id.cardViewEditTransaction);
+                cardViewEditTransaction.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Edit Transaction
+
+                        LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+                        AlertDialog.Builder mBuilderEditTrans = new AlertDialog.Builder(context);
+                        View mViewEditTrans = inflater.inflate(R.layout.dialog_edit_transaction,null);
+
+                        //Set Edit Text and Spinner
+                        spinnerJenisTransEdit = mViewEditTrans.findViewById(R.id.spinnerPilihTransEdit);
+                        nameKonsumen = mViewEditTrans.findViewById(R.id.txtNameTransEdit);
+                        alamatKonsumen = mViewEditTrans.findViewById(R.id.txtAddressTransEdit);
+                        phoneKonsumen = mViewEditTrans.findViewById(R.id.txtPhoneTransEdit);
+                        spinnerCity = mViewEditTrans.findViewById(R.id.spinnerCityTransEdit);
+
+                        //Load Spinner City
+                        loadSpinnerCities(httpClient,BASE_URL);
+
+                        //Set Text Data Edit
+                        nameKonsumen.setText(transactionByCabangDAO.getKonsumenTrans().getNameKonsumen());
+                        alamatKonsumen.setText(transactionByCabangDAO.getKonsumenTrans().getAddressKonsumen());
+                        phoneKonsumen.setText(transactionByCabangDAO.getKonsumenTrans().getPhoneKonsumen());
+
+                        final String idTrans = transactionByCabangDAO.getIdTransaction();
+
+                        mBuilderEditTrans.setView(mViewEditTrans)
+                                .setPositiveButton("Edit Data", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //Edit
+                                        editTransaction(httpClient,BASE_URL,idTrans,
+                                                spinnerJenisTransEdit.getSelectedItem().toString(),
+                                                nameKonsumen.getText().toString(),
+                                                phoneKonsumen.getText().toString(),
+                                                alamatKonsumen.getText().toString(),
+                                                spinnerCity.getSelectedItem().toString(),
+                                                "konsumen",
+                                                transactionByCabangDAO.getCustomer_id());
+                                    }
+                                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //Cancel
+                            }
+                        });
+
+                        AlertDialog dialog = mBuilderEditTrans.create();
+                        dialog.show();
+
+                    }
+                });
+
+                // Click Delete
+                CardView cardViewDeleteTransaction = mView.findViewById(R.id.cardViewDeleteTransaction);
+                cardViewDeleteTransaction.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Delete Transaction
+                        deleteTransaction(httpClient,BASE_URL,idTrans2);
+                    }
+                });
+
+                //Option Bawah
                 mBuilder.setView(mView)
                         .setPositiveButton("Tampil Data", new DialogInterface.OnClickListener() {
                             @Override
@@ -266,6 +334,120 @@ public class RecycleAdapterTransaction extends RecyclerView.Adapter<RecycleAdapt
             public void onFailure(Call<TransactionDAO> call, Throwable t) {
                 Toasty.error(context, t.getMessage(),
                         Toast.LENGTH_SHORT, true).show();
+            }
+        });
+    }
+
+    public void deleteTransaction(OkHttpClient.Builder httpClient, String BASE_URL, String idTrans)
+    {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(httpClient.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiClient apiClient = retrofit.create(ApiClient.class);
+        Call<TransactionDAO> transactionDAOCall = apiClient.deleteTransaction(idTrans);
+
+        transactionDAOCall.enqueue(new Callback<TransactionDAO>() {
+            @Override
+            public void onResponse(Call<TransactionDAO> call, retrofit2.Response<TransactionDAO> response) {
+
+                if(response.isSuccessful())
+                {
+                    Toasty.success(context, "Detail Berhasil Dihapus",
+                            Toast.LENGTH_SHORT, true).show();
+
+                    Intent intent = new Intent(context,DasboardActivity.class);
+                    context.startActivity(intent);
+                }
+                else{
+
+                    Toasty.error(context, "Gagal Menhapus Data",
+                            Toast.LENGTH_SHORT, true).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<TransactionDAO> call, Throwable t) {
+                Toasty.warning(context,"Semua Data Transaksi Terhapus",
+                        Toast.LENGTH_SHORT, true).show();
+
+                Intent intent = new Intent(context,DasboardActivity.class);
+                context.startActivity(intent);
+            }
+        });
+    }
+
+    public void editTransaction(OkHttpClient.Builder httpClient, String BASE_URL, String idTrans, String jenisTrans,
+                                String nameCosTrans, String phoneTrans, String addresTrans, String cityTrans,
+                                String role, String idKonsumen)
+    {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(httpClient.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiClient apiClient = retrofit.create(ApiClient.class);
+        Call<TransactionDAO> transactionDAOCall = apiClient.updateTransaction(idTrans,jenisTrans,nameCosTrans,
+                phoneTrans,addresTrans,cityTrans,role,idKonsumen);
+
+        transactionDAOCall.enqueue(new Callback<TransactionDAO>() {
+            @Override
+            public void onResponse(Call<TransactionDAO> call, retrofit2.Response<TransactionDAO> response) {
+
+                if(response.isSuccessful())
+                {
+                    Toasty.success(context, "Detail Berhasil Diedit",
+                            Toast.LENGTH_SHORT, true).show();
+
+                    Intent intent = new Intent(context,DasboardActivity.class);
+                    context.startActivity(intent);
+                }
+                else{
+
+                    Toasty.error(context, "Gagal Menhapus Data",
+                            Toast.LENGTH_SHORT, true).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<TransactionDAO> call, Throwable t) {
+                Toasty.error(context, t.getMessage(),
+                        Toast.LENGTH_SHORT, true).show();
+            }
+        });
+    }
+
+    public void loadSpinnerCities(OkHttpClient.Builder httpClient, String BASE_URL)
+    {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(httpClient.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiClient apiClient = retrofit.create(ApiClient.class);
+        Call<List<CitiesDAO>> listCall = apiClient.getCities();
+
+        listCall.enqueue(new Callback<List<CitiesDAO>>() {
+            @Override
+            public void onResponse(Call<List<CitiesDAO>> call, retrofit2.Response<List<CitiesDAO>> response) {
+                List<CitiesDAO> citiesDAOS = response.body();
+                for(int i=0; i < citiesDAOS.size(); i++ ){
+                    String name = citiesDAOS.get(i).getNameCities();
+                    listSpinner.add(name);
+                }
+                listSpinner.add(0,"-SELECT NAME CITY-");
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
+                        android.R.layout.simple_spinner_item,listSpinner);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerCity.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<CitiesDAO>> call, Throwable t) {
+
             }
         });
     }

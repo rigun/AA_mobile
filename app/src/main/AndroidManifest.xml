@@ -13,7 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TransaksiDetailActivity"></activity>
+        <activity android:name=".DetailLayananActivity"></activity>
+        <activity android:name=".DetailSparepartActivity" />
+        <activity android:name=".TransaksiDetailActivity" />
         <activity android:name=".TransactionActivity" />
         <activity android:name=".TambahPemasananActivity" />
         <activity android:name=".SparepartBySupActivity" />

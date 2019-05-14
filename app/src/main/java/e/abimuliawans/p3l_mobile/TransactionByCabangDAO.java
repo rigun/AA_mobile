@@ -28,6 +28,9 @@ public class TransactionByCabangDAO {
     @SerializedName("customer_id")
     @Expose
     public String customer_id;
+    @SerializedName("customer")
+    @Expose
+    public KonsumenDAO konsumenTrans;
 
     public TransactionByCabangDAO(String idTransaction, String transactionNumber, String totalServices,
                                   String totalSpareparts, String totalCost, String payment,
@@ -104,5 +107,13 @@ public class TransactionByCabangDAO {
 
     public void setCustomer_id(String customer_id) {
         this.customer_id = customer_id;
+    }
+
+    public KonsumenDAO getKonsumenTrans() {
+        return konsumenTrans;
+    }
+
+    public void setKonsumenTrans(KonsumenDAO konsumenTrans) {
+        this.konsumenTrans = konsumenTrans;
     }
 }

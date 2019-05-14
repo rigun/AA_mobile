@@ -188,7 +188,7 @@ public interface ApiClient {
     @GET("transactionByBranch/{branch_id}")
     Call<List<TransactionByCabangDAO>> getTransactionCabang(@Path("branch_id") String idCabang);
 
-    // Detail Transactio ============================================================================
+    // Detail Transaction and Detail ================================================================
 
     @POST("detailTransaction")
     @FormUrlEncoded
@@ -197,5 +197,58 @@ public interface ApiClient {
                                               @Field("transaction_id") String idTransaction);
     @GET("detailTransaction/{transactionId}")
     Call<List<TransactionDetailDAO>> getTransactionDetail(@Path("transactionId") String transactionId);
+
+    @DELETE("transaction/{id}")
+    Call<TransactionDAO> deleteTransaction(@Path("id") String idTrans);
+
+    @POST("updateTransaction/{idTransaction}")
+    @FormUrlEncoded
+    Call<TransactionDAO> updateTransaction(@Path("idTransaction") String id,
+                                           @Field("jenisTransaksi") String jenisTrans,
+                                           @Field("name") String name,
+                                           @Field("phoneNumber") String phone,
+                                           @Field("address") String address,
+                                           @Field("city") String city,
+                                           @Field("role") String role,
+                                           @Field("customerId") String idCostumer);
+
+    // Detail Sparepart =============================================================================
+
+    @GET("sparepartBranch/{branchId}")
+    Call<List<SparepartCabangSupDAO>> getSparepartCabang(@Path("branchId") String transactionId);
+
+    @GET("detailTSp/{transactionDetailId}/{branchId}")
+    Call<List<TransactionDAO>> getDetailSparepart(@Path("transactionDetailId") String transactionDetailId,
+                                                  @Path("branchId") String branchId);
+
+    @POST("detailTSp")
+    @FormUrlEncoded
+    Call<TransactionDAO> addDetailSparepart(@Field("trasanctiondetail_id") String transID,
+                                            @Field("sparepart_code") String codeSpare,
+                                            @Field("total") String total,
+                                            @Field("branch_id") String idCabang);
+
+    // Detail Layanan ===============================================================================
+
+    @GET("service")
+    Call<List<ServiceDAO>> getService();
+
+    @GET("detailTSv/{transactionDetailId}")
+    Call<List<DetailLayananDAO>> getDetailService(@Path("transactionDetailId") String idDetailTrans);
+
+    @POST("detailTSv")
+    @FormUrlEncoded
+    Call<TransactionDAO> addDetailService(@Field("trasanctiondetail_id") String transID,
+                                          @Field("service_id") String serviceId,
+                                          @Field("total") String total);
+
+    @DELETE("detailTSv/{tspId}")
+    Call<DetailLayananDAO> deleteDetailService(@Path("tspId") String idDetailService);
+
+    @POST("detailTSv/{tspId}")
+    @FormUrlEncoded
+    Call<DetailLayananDAO> editDetailService(@Path("tspId") String idDetailService,
+                                          @Field("service_id") String serviceId,
+                                          @Field("total") String total);
 
 }

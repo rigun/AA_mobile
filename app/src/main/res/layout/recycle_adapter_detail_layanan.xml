@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/cardViewAdapterTrans"
+        android:id="@+id/cardViewAdapterDetailLayanan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp">
@@ -25,7 +25,7 @@
                 />
 
             <TextView
-                android:id="@+id/idTransaction"
+                android:id="@+id/idDetailLayanan"
                 android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -41,69 +41,30 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/transNumber"
+                android:id="@+id/nameDetailLayanan"
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="Number"
+                android:text="Name"
                 android:textSize="20sp"
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/totalServiceTrans"
+                android:id="@+id/totalDetailLayanan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="Total Service"
+                android:text="total"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/totalSparepartTrans"
+                android:id="@+id/priceDetailLayanan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="Total Sparepart"
+                android:text="Price"
                 android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/paymentTrans"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="Payment"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/diskonTrans"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="Diskon"
-                android:textSize="16sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="133dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="26dp"
-                android:layout_marginTop="5dp"
-                android:text="Nama Konsumen : "
-                />
-
-            <TextView
-                android:id="@+id/idCustomerTrans"
-                android:layout_marginTop="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Nama"/>
 
         </LinearLayout>
 

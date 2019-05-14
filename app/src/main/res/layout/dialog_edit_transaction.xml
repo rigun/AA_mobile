@@ -18,10 +18,64 @@
         android:textSize="20sp"
         android:layout_gravity="center"/>
 
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <EditText
+            android:id="@+id/txtNameTransEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:hint="Nama Konsumen" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <EditText
+            android:id="@+id/txtPhoneTransEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:inputType="phone"
+            android:hint="Phone Konsumen" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <EditText
+            android:id="@+id/txtAddressTransEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:hint="Alamat Konsumen" />
+    </android.support.design.widget.TextInputLayout>
+
+    <Spinner
+        android:id="@+id/spinnerCityTransEdit"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp">
+    </Spinner>
+
     <Spinner
         android:id="@+id/spinnerPilihTransEdit"
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
-        android:layout_height="45dp"></Spinner>
+        android:layout_height="45dp"
+        android:entries="@array/arrayJenisTrans"
+        android:prompt="@array/arrayJenisTrans"
+        android:focusable="false">
+    </Spinner>
 
 </LinearLayout>

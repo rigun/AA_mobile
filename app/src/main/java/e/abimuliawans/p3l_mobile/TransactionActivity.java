@@ -84,6 +84,12 @@ public class TransactionActivity extends AppCompatActivity implements SearchView
         Bundle bundle = getIntent().getExtras();
         inputIDcabang = bundle.getString("idCabang");
 
+        //Mengirim ID Cabang
+        SharedPreferences pref2 = getApplicationContext().getSharedPreferences("MyCabang", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref2.edit();
+        editor.putString("id_cabang", inputIDcabang);
+        editor.commit();
+
         //Pengecekan Bearer Token
         final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 

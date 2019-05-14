@@ -8,4 +8,5 @@ public class ValueKonsumen {
     public List<KonsumenDAO> getResult(){
         return result;
     }
+
 }

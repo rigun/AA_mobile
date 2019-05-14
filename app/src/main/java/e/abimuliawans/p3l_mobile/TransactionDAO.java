@@ -28,18 +28,19 @@ public class TransactionDAO {
     @SerializedName("jenisTransaksi")
     @Expose
     public String jenisTransaksi;
+    @SerializedName("customer")
+    @Expose
+    public KonsumenDAO konsumenTrans;
+    @SerializedName("data")
+    @Expose
+    public DetailSparepartDAO detailSparepart;
 
-    public TransactionDAO(String idKonsumenTrans, String nameKonsumenTrans, String phoneKonsumenTrans,
-                          String addressKonsumenTrans, String cityKonsumenTrans, String cabangTrans,
-                          String roleTrans, String jenisTransaksi) {
-        this.idKonsumenTrans = idKonsumenTrans;
-        this.nameKonsumenTrans = nameKonsumenTrans;
-        this.phoneKonsumenTrans = phoneKonsumenTrans;
-        this.addressKonsumenTrans = addressKonsumenTrans;
-        this.cityKonsumenTrans = cityKonsumenTrans;
-        this.cabangTrans = cabangTrans;
-        this.roleTrans = roleTrans;
-        this.jenisTransaksi = jenisTransaksi;
+    public KonsumenDAO getKonsumenTrans() {
+        return konsumenTrans;
+    }
+
+    public void setKonsumenTrans(KonsumenDAO konsumenTrans) {
+        this.konsumenTrans = konsumenTrans;
     }
 
     public String getIdKonsumenTrans() {
@@ -104,5 +105,13 @@ public class TransactionDAO {
 
     public void setJenisTransaksi(String jenisTransaksi) {
         this.jenisTransaksi = jenisTransaksi;
+    }
+
+    public DetailSparepartDAO getDetailSparepart() {
+        return detailSparepart;
+    }
+
+    public void setDetailSparepart(DetailSparepartDAO detailSparepart) {
+        this.detailSparepart = detailSparepart;
     }
 }

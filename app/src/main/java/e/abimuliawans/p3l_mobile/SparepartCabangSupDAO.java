@@ -10,7 +10,7 @@ public class SparepartCabangSupDAO {
 
     @SerializedName("sparepart_code")
     @Expose
-    public Integer codeSpareScp;
+    public String codeSpareScp;
 
     @SerializedName("branch_id")
     @Expose
@@ -36,7 +36,7 @@ public class SparepartCabangSupDAO {
     @Expose
     public Integer limitstockScp;
 
-    public SparepartCabangSupDAO(Integer idScp, Integer codeSpareScp, Integer idCabangScp,
+    public SparepartCabangSupDAO(Integer idScp, String codeSpareScp, Integer idCabangScp,
                                  Double buyScp, Double sellScp, String positionScp, Integer stockScp,
                                  Integer limitstockScp) {
         this.idScp = idScp;
@@ -57,11 +57,11 @@ public class SparepartCabangSupDAO {
         this.idScp = idScp;
     }
 
-    public Integer getCodeSpareScp() {
+    public String getCodeSpareScp() {
         return codeSpareScp;
     }
 
-    public void setCodeSpareScp(Integer codeSpareScp) {
+    public void setCodeSpareScp(String codeSpareScp) {
         this.codeSpareScp = codeSpareScp;
     }
 
