@@ -223,7 +223,7 @@ public class DetailLayananActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<TransactionDAO> call, Throwable t) {
-                Toasty.error(DetailLayananActivity.this, t.getMessage(),
+                Toasty.warning(DetailLayananActivity.this, "Berhasil Ditambah",
                         Toast.LENGTH_SHORT, true).show();
             }
         });

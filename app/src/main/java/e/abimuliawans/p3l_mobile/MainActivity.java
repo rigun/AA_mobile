@@ -25,7 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button btnAdmin;
+    private Button btnAdmin,btnKonsumen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +33,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btnAdmin = (Button)findViewById(R.id.btnAdmin);
-
         btnAdmin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this,LoginActivity.class);
                 startActivity(intent);
 
+            }
+        });
+
+        btnKonsumen = findViewById(R.id.btnKonsumen);
+        btnKonsumen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,DasboardKonsumenActivity.class);
+                startActivity(intent);
             }
         });
     }

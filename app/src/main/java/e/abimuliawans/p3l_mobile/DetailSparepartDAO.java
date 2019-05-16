@@ -26,10 +26,10 @@ public class DetailSparepartDAO {
 
     @SerializedName("sparepart")
     @Expose
-    public String sparepart;
+    public SparepartDAO sparepart;
 
     public DetailSparepartDAO(String idDetailSpare, String transDetailId,
-                              String codeSpare, String totalSpare, String price, String sparepart) {
+                              String codeSpare, String totalSpare, String price, SparepartDAO sparepart) {
         this.idDetailSpare = idDetailSpare;
         this.transDetailId = transDetailId;
         this.codeSpare = codeSpare;
@@ -78,11 +78,11 @@ public class DetailSparepartDAO {
         this.price = price;
     }
 
-    public String getSparepart() {
+    public SparepartDAO getSparepart() {
         return sparepart;
     }
 
-    public void setSparepart(String sparepart) {
+    public void setSparepart(SparepartDAO sparepart) {
         this.sparepart = sparepart;
     }
 }

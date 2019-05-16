@@ -71,6 +71,10 @@ public class RecycleAdapterDetailLayanan extends RecyclerView.Adapter<RecycleAda
         final String token = pref.getString("token_access", null);
         final String BASE_URL = pref.getString("BASE_URL",null);
 
+        //Get Status Transaction
+        SharedPreferences prefStatus = context.getSharedPreferences("MyStatus", MODE_PRIVATE);
+        final String statusTransaction = prefStatus.getString("status", null);
+
         //Cek Token
         final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
@@ -83,82 +87,95 @@ public class RecycleAdapterDetailLayanan extends RecyclerView.Adapter<RecycleAda
         });
 
         //Click CardView
-        myViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //New Alert
-                AlertDialog.Builder builderSal = new AlertDialog.Builder(context);
-                builderSal.setTitle("Pilih Pengaturan :");
-                builderSal.setMessage(myViewHolder.mName.getText().toString());
-                builderSal.setCancelable(true);
 
-                builderSal.setPositiveButton(
-                        "Edit",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                               //Edit
-                                LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-                                AlertDialog.Builder mBuilderAddDetail = new AlertDialog.Builder(context);
-                                View mViewAddDetail = inflater.inflate(R.layout.dialog_edit_detail_service,null);
+        // Exception Status
+        if(statusTransaction.equals("3"))
+        {
+            //Selesai
+            Toasty.warning(context,"Hanya Dapat Melihat Data",
+                    Toast.LENGTH_SHORT, true).show();
 
-                                //Set EditText and Spinner
-                                spinnerIdServiceEdit = mViewAddDetail.findViewById(R.id.spinnerIdServiceEdit);
-                                totalEdit = mViewAddDetail.findViewById(R.id.txtTotalDetailServiceEdit);
+        }
+        else if(statusTransaction.equals("0"))
+        {
+            myViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //New Alert
+                    AlertDialog.Builder builderSal = new AlertDialog.Builder(context);
+                    builderSal.setTitle("Pilih Pengaturan :");
+                    builderSal.setMessage(myViewHolder.mName.getText().toString());
+                    builderSal.setCancelable(true);
 
-                                //Load Spinner
-                                loadSpinnerService(httpClient,BASE_URL);
+                    builderSal.setPositiveButton(
+                            "Edit",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Edit
+                                    LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+                                    AlertDialog.Builder mBuilderAddDetail = new AlertDialog.Builder(context);
+                                    View mViewAddDetail = inflater.inflate(R.layout.dialog_edit_detail_service,null);
 
-                                mBuilderAddDetail.setView(mViewAddDetail)
-                                        .setPositiveButton("Edit Data", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                //Edit
-                                                String spinnerService = spinnerIdServiceEdit.getSelectedItem().toString();
-                                                String inputService = Character.toString(spinnerService.charAt(0));
+                                    //Set EditText and Spinner
+                                    spinnerIdServiceEdit = mViewAddDetail.findViewById(R.id.spinnerIdServiceEdit);
+                                    totalEdit = mViewAddDetail.findViewById(R.id.txtTotalDetailServiceEdit);
 
-                                                editDetailService(httpClient,BASE_URL,detailLayananDAO.getIdDetailLayanan(),
-                                                        inputService,totalEdit.getText().toString());
+                                    //Load Spinner
+                                    loadSpinnerService(httpClient,BASE_URL);
 
-                                                listSpinnerIDService.clear();
-                                                spinnerIdServiceEdit.setAdapter(null);
-                                            }
-                                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //Batal
-                                    }
-                                });
+                                    mBuilderAddDetail.setView(mViewAddDetail)
+                                            .setPositiveButton("Edit Data", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    //Edit
+                                                    String spinnerService = spinnerIdServiceEdit.getSelectedItem().toString();
+                                                    String inputService = Character.toString(spinnerService.charAt(0));
 
-                                AlertDialog dialogDetail = mBuilderAddDetail.create();
-                                dialogDetail.show();
+                                                    editDetailService(httpClient,BASE_URL,detailLayananDAO.getIdDetailLayanan(),
+                                                            inputService,totalEdit.getText().toString());
 
-                            }
-                        });
+                                                    listSpinnerIDService.clear();
+                                                    spinnerIdServiceEdit.setAdapter(null);
+                                                }
+                                            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //Batal
+                                        }
+                                    });
 
-                builderSal.setNegativeButton(
-                        "Delete",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Delete
-                                deleteDetailService(httpClient,BASE_URL,detailLayananDAO.getIdDetailLayanan());
-                            }
-                        });
+                                    AlertDialog dialogDetail = mBuilderAddDetail.create();
+                                    dialogDetail.show();
 
-                builderSal.setNeutralButton(
-                        "Cancel",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Cancel
-                            }
-                        });
+                                }
+                            });
 
-                AlertDialog alertDialog = builderSal.create();
-                alertDialog.show();
-            }
-        });
+                    builderSal.setNegativeButton(
+                            "Delete",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Delete
+                                    deleteDetailService(httpClient,BASE_URL,detailLayananDAO.getIdDetailLayanan());
+                                }
+                            });
+
+                    builderSal.setNeutralButton(
+                            "Cancel",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Cancel
+                                }
+                            });
+
+                    AlertDialog alertDialog = builderSal.create();
+                    alertDialog.show();
+                }
+            });
+        }
+
     }
 
     @Override

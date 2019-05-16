@@ -260,4 +260,8 @@ public interface ApiClient {
                                           @Field("service_id") String serviceId,
                                           @Field("total") String total);
 
+    // Stok Kurang ==================================================================================
+
+    @GET("sparepartKurang")
+    Call<List<StokSparepartDAO>> getStokKurang();
 }

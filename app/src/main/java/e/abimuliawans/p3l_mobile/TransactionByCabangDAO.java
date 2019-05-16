@@ -31,6 +31,10 @@ public class TransactionByCabangDAO {
     @SerializedName("customer")
     @Expose
     public KonsumenDAO konsumenTrans;
+    @SerializedName("status")
+    @Expose
+    public String status;
+
 
     public TransactionByCabangDAO(String idTransaction, String transactionNumber, String totalServices,
                                   String totalSpareparts, String totalCost, String payment,
@@ -115,5 +119,9 @@ public class TransactionByCabangDAO {
 
     public void setKonsumenTrans(KonsumenDAO konsumenTrans) {
         this.konsumenTrans = konsumenTrans;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }

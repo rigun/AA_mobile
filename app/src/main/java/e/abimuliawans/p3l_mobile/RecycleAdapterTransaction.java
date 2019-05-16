@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -66,12 +67,30 @@ public class RecycleAdapterTransaction extends RecyclerView.Adapter<RecycleAdapt
     public void onBindViewHolder(final RecycleAdapterTransaction.MyViewHolder myViewHolder, final int i) {
         final TransactionByCabangDAO transactionByCabangDAO = result.get(i);
         myViewHolder.mIdTrans.setText(transactionByCabangDAO.getIdTransaction());
-        myViewHolder.mNumber.setText(transactionByCabangDAO.getTransactionNumber());
+        myViewHolder.mNumber.setText(transactionByCabangDAO.getTransactionNumber()+"-"+transactionByCabangDAO.getIdTransaction());
         myViewHolder.mService.setText("Total Service :"+transactionByCabangDAO.getTotalServices());
         myViewHolder.mSparepart.setText("Total Sparepart :"+transactionByCabangDAO.getTotalSpareparts());
         myViewHolder.mIDCustomer.setText(transactionByCabangDAO.getKonsumenTrans().getNameKonsumen());
         myViewHolder.mPayment.setText("Payment :"+transactionByCabangDAO.getPayment());
         myViewHolder.mDiskon.setText("Diskon :"+transactionByCabangDAO.getDiskon());
+
+        //Set Progres View Button, Cek Status, and Send Status to Detail
+        String statusTransaction = transactionByCabangDAO.getStatus();
+        SharedPreferences prefStatus = context.getSharedPreferences("MyStatus", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefStatus.edit();
+        editor.putString("status", statusTransaction);
+        editor.commit();
+
+        if(statusTransaction.equals("3"))
+        {
+            //Selesai
+            myViewHolder.btnStatus.setBackgroundResource(R.drawable.btn_progres_selesai);
+            myViewHolder.btnStatus.setText("Selesai");
+        }
+        else if(statusTransaction.equals("0"))
+        {
+            //Pengisisan Data
+        }
 
         //Get Token
         SharedPreferences pref = context.getSharedPreferences("MyToken", MODE_PRIVATE);
@@ -97,11 +116,20 @@ public class RecycleAdapterTransaction extends RecyclerView.Adapter<RecycleAdapt
 
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
                 final View mView = inflater.inflate(R.layout.dialog_option_transaction,null);
-
+                final String status = transactionByCabangDAO.getStatus();
                 final String idTrans2 = transactionByCabangDAO.getIdTransaction();
+                final String string = transactionByCabangDAO.getTransactionNumber();
+                final String[] parts = string.split("-");
+                final String partTipeTransaction = parts[0]; // SS,SV,SP
 
-                // Click Tambah
+                // Cek Status
                 CardView tambahDetail = mView.findViewById(R.id.cardViewAddDetailTrans);
+                if(status.equals("3"))
+                {
+                    //Selesai
+                    tambahDetail.setVisibility(View.GONE);
+                }
+                // Click Tambah
                 tambahDetail.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -145,8 +173,14 @@ public class RecycleAdapterTransaction extends RecyclerView.Adapter<RecycleAdapt
                     }
                 });
 
-                // Click Edit
+                //Cek Status
                 CardView cardViewEditTransaction = mView.findViewById(R.id.cardViewEditTransaction);
+                if(status.equals("3"))
+                {
+                    //Selesai
+                    cardViewEditTransaction.setVisibility(View.GONE);
+                }
+                // Click Edit
                 cardViewEditTransaction.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -200,8 +234,15 @@ public class RecycleAdapterTransaction extends RecyclerView.Adapter<RecycleAdapt
                     }
                 });
 
-                // Click Delete
+                // Cek Status
                 CardView cardViewDeleteTransaction = mView.findViewById(R.id.cardViewDeleteTransaction);
+                if(status.equals("3"))
+                {
+                    //Selesai
+                    cardViewDeleteTransaction.setVisibility(View.GONE);
+                }
+
+                // Click Delete
                 cardViewDeleteTransaction.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -212,10 +253,17 @@ public class RecycleAdapterTransaction extends RecyclerView.Adapter<RecycleAdapt
 
                 //Option Bawah
                 mBuilder.setView(mView)
-                        .setPositiveButton("Tampil Data", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("Tampil Kendaraan", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //Tambah
+                                //Tampil Data Detail (Kendaraan)
+                                //Save Jenis Transaksi
+                                SharedPreferences prefTrans = context.getSharedPreferences("MyJenisTransaksi", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = prefTrans.edit();
+                                editor.putString("jenis_transaksi",partTipeTransaction );
+                                editor.commit();
+
+                                //Intent to Detail Transaksi
                                 Intent intent = new Intent(context,TransaksiDetailActivity.class);
                                 intent.putExtra("idTrans",idTrans2 );
                                 context.startActivity(intent);
@@ -246,6 +294,7 @@ public class RecycleAdapterTransaction extends RecyclerView.Adapter<RecycleAdapt
 
         private TextView mNumber,mIDCustomer,mService,mIdTrans,mSparepart,mPayment,mDiskon;
         private CardView cardView;
+        private Button btnStatus;
 
         public MyViewHolder(@NonNull  View itemView){
             super(itemView);
@@ -258,6 +307,7 @@ public class RecycleAdapterTransaction extends RecyclerView.Adapter<RecycleAdapt
             mDiskon=itemView.findViewById(R.id.diskonTrans);
 
             cardView=itemView.findViewById(R.id.cardViewAdapterTrans);
+            btnStatus=itemView.findViewById(R.id.btnShowStatusTransaction);
         }
 
         @Override

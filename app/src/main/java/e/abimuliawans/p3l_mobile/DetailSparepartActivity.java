@@ -207,7 +207,7 @@ public class DetailSparepartActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ApiClient apiClient = retrofit.create(ApiClient.class);
-        Call<List<TransactionDAO>> detailSparepartCall = apiClient.getDetailSparepart("3","1");
+        Call<List<TransactionDAO>> detailSparepartCall = apiClient.getDetailSparepart(idDetailTrans,id_cabang);
 
         detailSparepartCall.enqueue(new Callback<List<TransactionDAO>>() {
             @Override

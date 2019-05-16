@@ -58,11 +58,39 @@ public class RecycleAdapterTransactionDetail extends RecyclerView.Adapter<Recycl
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
                 View mView = inflater.inflate(R.layout.dialog_menu_click_transaction,null);
 
+                //Get Jenis Sparepart
+                SharedPreferences prefJenis = context.getSharedPreferences("MyJenisTransaksi", MODE_PRIVATE);
+                final String tempJenisTransaksi = prefJenis.getString("jenis_transaksi", null);
+
+                //Get Status Transaction
+                SharedPreferences prefStatus = context.getSharedPreferences("MyStatus", MODE_PRIVATE);
+                final String statusTransaction = prefStatus.getString("status", null);
+
                 //Set Card View
                 cardViewSparepart = mView.findViewById(R.id.cardDetailSparepartDT);
                 cardViewLayanan = mView.findViewById(R.id.cardDetailServiceDT);
                 cardViewEdit = mView.findViewById(R.id.cardTransactionDetailEdit);
                 cardViewDelete = mView.findViewById(R.id.cardTransactionDetailDelete);
+
+                //Set Status Transaction
+                if(statusTransaction.equals("3"))
+                {
+                    //Selesai
+                    cardViewEdit.setVisibility(View.GONE);
+                    cardViewDelete.setVisibility(View.GONE);
+                }
+
+                //Set Visibility For Transaction (SS,SV,SP)
+                if(tempJenisTransaksi.equals("SV"))
+                {
+                    //For Service SV
+                    cardViewSparepart.setVisibility(View.GONE);
+                }
+                else if(tempJenisTransaksi.equals("SP"))
+                {
+                    //For Sparepart SP
+                    cardViewLayanan.setVisibility(View.GONE);
+                }
 
                 // Click Detail Sparepart
                 cardViewSparepart.setOnClickListener(new View.OnClickListener() {

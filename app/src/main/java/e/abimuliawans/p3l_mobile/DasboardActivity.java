@@ -1,11 +1,20 @@
 package e.abimuliawans.p3l_mobile;
 
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -44,7 +53,13 @@ public class DasboardActivity extends AppCompatActivity {
     private String token,BASE_URL;
     private Spinner spinnerCabang;
     private List<String> listSpinnerCabang = new ArrayList<String>();
+    private List<StokSparepartDAO> listStokSparepart;
     private boolean isOpen = false;
+
+    //Channel Notification
+    private static final String CHANNEL_ID = "notifikasi_stok_kurang";
+    private static final String CHANNEL_NAME = "Stok Sparepart Kurang";
+    private static final String CHANNEL_DECS = "Stok Sparepart ini Kurang";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +81,35 @@ public class DasboardActivity extends AppCompatActivity {
                 return chain.proceed(request);
             }
         });
+
+        //Notification
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,CHANNEL_NAME, NotificationManager.IMPORTANCE_MAX);
+            channel.setDescription(CHANNEL_DECS);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
+        //Set Stok Kurang
+        setStokKurang(httpClient);
+
+        //Interval Show Notif
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(listStokSparepart==null)
+                {
+                    //Tidak Terdapat Stok Kurang
+                }
+                else
+                {
+                    //Show Notification
+                    displayNotification();
+                }
+            }
+        }, 5000);
+
 
         //Main Menu Button On Clicked
         imgPemesanan = findViewById(R.id.imgPesanan);
@@ -277,6 +321,50 @@ public class DasboardActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void displayNotification()
+    {
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this,CHANNEL_ID)
+                .setSmallIcon(R.drawable.icplug)
+                .setContentTitle("Atma Auto")
+                .setContentText("Terdapat Stok Sparepart Kurang")
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icplug));
+
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, StokSparepartActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+
+        mBuilder.setContentIntent(contentIntent);
+
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+        notificationManagerCompat.notify(1,mBuilder.build());
+    }
+
+    public void setStokKurang(OkHttpClient.Builder httpClient)
+    {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(httpClient.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiClient apiClient = retrofit.create(ApiClient.class);
+        Call<List<StokSparepartDAO>> listCall = apiClient.getStokKurang();
+
+        listCall.enqueue(new Callback<List<StokSparepartDAO>>() {
+            @Override
+            public void onResponse(Call<List<StokSparepartDAO>> call, retrofit2.Response<List<StokSparepartDAO>> response) {
+                List<StokSparepartDAO> stokSparepartDAOS = response.body();
+                listStokSparepart = stokSparepartDAOS;
+            }
+
+            @Override
+            public void onFailure(Call<List<StokSparepartDAO>> call, Throwable t) {
+
+            }
+        });
     }
 
     public void loadSpinnerCabang(OkHttpClient.Builder httpClient)

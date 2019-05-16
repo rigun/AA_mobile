@@ -75,6 +75,10 @@ public class RecycleAdapterDetailSparepart extends RecyclerView.Adapter<RecycleA
         SharedPreferences prefCabang = context.getSharedPreferences("MyCabang", Context.MODE_PRIVATE);
         final String id_cabang = prefCabang.getString("id_cabang",null);
 
+        //Get Status Transaction
+        SharedPreferences prefStatus = context.getSharedPreferences("MyStatus", MODE_PRIVATE);
+        final String statusTransaction = prefStatus.getString("status", null);
+
         //Cek Token
         final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
@@ -86,77 +90,90 @@ public class RecycleAdapterDetailSparepart extends RecyclerView.Adapter<RecycleA
             }
         });
 
-        myViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Alert
-                AlertDialog.Builder builderSal = new AlertDialog.Builder(context);
-                builderSal.setTitle("Pilih Pengaturan :");
-                builderSal.setMessage(myViewHolder.mCode.getText().toString());
-                builderSal.setCancelable(true);
+        // Exception Status
+        if(statusTransaction.equals("3"))
+        {
+            //Selesai
+            Toasty.warning(context,"Hanya Dapat Melihat Data",
+                    Toast.LENGTH_SHORT, true).show();
 
-                builderSal.setPositiveButton(
-                        "Edit",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Edit
-                                LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-                                AlertDialog.Builder mBuilderAddDetail = new AlertDialog.Builder(context);
-                                View mViewAddDetail = inflater.inflate(R.layout.dialog_edit_detail_sparepart,null);
+        }
+        else if(statusTransaction.equals("0"))
+        {
+            myViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Alert
+                    AlertDialog.Builder builderSal = new AlertDialog.Builder(context);
+                    builderSal.setTitle("Pilih Pengaturan :");
+                    builderSal.setMessage(myViewHolder.mCode.getText().toString());
+                    builderSal.setCancelable(true);
 
-                                //Set EditText and Spinner
-                                spinnerCodeSpare = mViewAddDetail.findViewById(R.id.spinnerCodeSpareByCabangDetailEdit);
-                                totalText = mViewAddDetail.findViewById(R.id.txtTotalDetailSpareEdit);
+                    builderSal.setPositiveButton(
+                            "Edit",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Edit
+                                    LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+                                    AlertDialog.Builder mBuilderAddDetail = new AlertDialog.Builder(context);
+                                    View mViewAddDetail = inflater.inflate(R.layout.dialog_edit_detail_sparepart,null);
 
-                                //Load Spinner
-                                loadCodeSparepartSpinner(httpClient,id_cabang,BASE_URL);
+                                    //Set EditText and Spinner
+                                    spinnerCodeSpare = mViewAddDetail.findViewById(R.id.spinnerCodeSpareByCabangDetailEdit);
+                                    totalText = mViewAddDetail.findViewById(R.id.txtTotalDetailSpareEdit);
 
-                                mBuilderAddDetail.setView(mViewAddDetail)
-                                        .setPositiveButton("Edit Data", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                //Edit
-                                                editDetailSparepart(httpClient,BASE_URL,transactionDAO.getDetailSparepart().getIdDetailSpare(),
-                                                        spinnerCodeSpare.getSelectedItem().toString(),totalText.getText().toString());
-                                                listSpinnerCode.clear();
-                                                spinnerCodeSpare.setAdapter(null);
-                                            }
-                                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                //Batal
-                                    }
-                                });
+                                    //Load Spinner
+                                    loadCodeSparepartSpinner(httpClient,id_cabang,BASE_URL);
 
-                                AlertDialog dialogDetail = mBuilderAddDetail.create();
-                                dialogDetail.show();
-                            }
-                        });
+                                    mBuilderAddDetail.setView(mViewAddDetail)
+                                            .setPositiveButton("Edit Data", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    //Edit
+                                                    editDetailSparepart(httpClient,BASE_URL,transactionDAO.getDetailSparepart().getIdDetailSpare(),
+                                                            spinnerCodeSpare.getSelectedItem().toString(),totalText.getText().toString());
+                                                    listSpinnerCode.clear();
+                                                    spinnerCodeSpare.setAdapter(null);
+                                                }
+                                            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //Batal
+                                        }
+                                    });
 
-                builderSal.setNegativeButton(
-                        "Delete",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Delete
-                                deleteDetailSparepart(httpClient,BASE_URL,transactionDAO.getDetailSparepart().getIdDetailSpare());
-                            }
-                        });
+                                    AlertDialog dialogDetail = mBuilderAddDetail.create();
+                                    dialogDetail.show();
+                                }
+                            });
 
-                builderSal.setNeutralButton(
-                        "Cancel",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Cancel
-                            }
-                        });
+                    builderSal.setNegativeButton(
+                            "Delete",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Delete
+                                    deleteDetailSparepart(httpClient,BASE_URL,transactionDAO.getDetailSparepart().getIdDetailSpare());
+                                }
+                            });
 
-                AlertDialog alertDialog = builderSal.create();
-                alertDialog.show();
-            }
-        });
+                    builderSal.setNeutralButton(
+                            "Cancel",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Cancel
+                                }
+                            });
+
+                    AlertDialog alertDialog = builderSal.create();
+                    alertDialog.show();
+                }
+            });
+        }
+
+
     }
 
     @Override

@@ -1,7 +1,9 @@
 package e.abimuliawans.p3l_mobile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -37,6 +39,7 @@ public class SparepartActivity extends AppCompatActivity implements SearchView.O
     private RecyclerView.LayoutManager layoutManager;
     private String token,BASE_URL;
     private ProgressBar progressBar;
+    private FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +81,17 @@ public class SparepartActivity extends AppCompatActivity implements SearchView.O
 
         // Menampilkan RecyclerView
         setRecycleViewSparepart(httpClient);
+
+        //Floating Action Button Show Stok
+        floatingActionButton = findViewById(R.id.btnShowStokSparepart);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // To Stok Sparepart Activity
+                Intent intent = new Intent(SparepartActivity.this,StokSparepartActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

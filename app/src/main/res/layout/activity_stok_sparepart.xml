@@ -1,31 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SparepartActivity">
+    tools:context=".StokSparepartActivity">
 
     <include
-        android:id="@+id/toolbarSparepart"
+        android:id="@+id/toolbarStokKurang"
         layout="@layout/toolbar_layout_sparepart"
         />
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/ic_stok_white"
-        app:elevation="6dp"
-        app:fabSize="normal"
-        android:clickable="true"
-        android:id="@+id/btnShowStokSparepart"/>
-
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerViewSparepart"
+        android:id="@+id/recyclerViewStokKurang"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="55dp"
@@ -33,10 +21,11 @@
     </android.support.v7.widget.RecyclerView>
 
     <ProgressBar
-        android:id="@+id/progress_bar_sparepart"
+        android:id="@+id/progress_bar_stok_kurang"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:indeterminate="true"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
+
 </RelativeLayout>

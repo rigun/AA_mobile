@@ -1,0 +1,44 @@
+package e.abimuliawans.p3l_mobile;
+
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.CardView;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+public class DasboardKonsumenActivity extends AppCompatActivity {
+
+    private Animation atg, atgtwo, atgthree;
+    private TextView pagetitle,pagesubtitle,txtFab;
+    private ImageView imageView3,imgSparepart,imgCabang, imgHistory,imgAboutUs;
+    private String token,BASE_URL;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_dasboard_konsumen);
+
+        //Main Menu Button
+        imgSparepart = findViewById(R.id.imgSparepartKonsumen);
+        imgHistory = findViewById(R.id.imgHistory);
+        imgAboutUs = findViewById(R.id.imgAboutUs);
+        imgCabang = findViewById(R.id.imgCabang);
+
+        //Inisialisasi Animation
+        atg = AnimationUtils.loadAnimation(DasboardKonsumenActivity.this, R.anim.atg);
+        atgtwo = AnimationUtils.loadAnimation(DasboardKonsumenActivity.this, R.anim.atgtwo);
+        atgthree = AnimationUtils.loadAnimation(DasboardKonsumenActivity.this, R.anim.atgthree);
+
+        pagetitle = findViewById(R.id.pagetitle2);
+        pagesubtitle = findViewById(R.id.pagesubtitle2);
+        imageView3 = findViewById(R.id.imageViewCS);
+
+        // Pass an animation
+        imageView3.startAnimation(atg);
+        pagetitle.startAnimation(atgtwo);
+        pagesubtitle.startAnimation(atgtwo);
+    }
+}
