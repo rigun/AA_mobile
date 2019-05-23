@@ -13,15 +13,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -45,13 +48,16 @@ public class TransactionActivity extends AppCompatActivity implements SearchView
     private RecycleAdapterTransaction recycleAdapterTransaction;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView recyclerViewTransaction;
-    private String token,BASE_URL,inputIDcabang;
+    private String token, BASE_URL, inputIDcabang;
     private List<String> listSpinnerCity = new ArrayList<>();
     private List<String> listSpinnerCabang = new ArrayList<>();
     private FloatingActionButton floatingActionButton;
-    private EditText txtNameTrans,txtPhoneTrans,txtCityTrans,txtAddressTrans;
+    private EditText txtNameTrans, txtPhoneTrans, txtCityTrans, txtAddressTrans;
     private ProgressBar progressBar;
-    private Spinner spinnerCity,spinnerCabang,spinnerJenisTrans;
+    private Spinner spinnerCity, spinnerCabang, spinnerJenisTrans;
+    private Switch switchKonsumenBaru;
+    private Boolean cekKonsumenBaru;
+    private KonsumenDAO dataKonsumenLama;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +67,7 @@ public class TransactionActivity extends AppCompatActivity implements SearchView
         //Pengambilan Token
         SharedPreferences pref = getApplication().getSharedPreferences("MyToken", Context.MODE_PRIVATE);
         token = pref.getString("token_access", null);
-        BASE_URL = pref.getString("BASE_URL",null);
+        BASE_URL = pref.getString("BASE_URL", null);
 
         //Inisialisasi Progres Bar
         progressBar = findViewById(R.id.progress_bar_transaction);
@@ -73,9 +79,9 @@ public class TransactionActivity extends AppCompatActivity implements SearchView
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //Inisialisasi Recycle
-        recyclerView =findViewById(R.id.recyclerViewTransaction);
-        recycleAdapterTransaction= new RecycleAdapterTransaction(TransactionActivity.this,mListTransaction);
-        RecyclerView.LayoutManager mLayoutManager= new LinearLayoutManager(getApplicationContext());
+        recyclerView = findViewById(R.id.recyclerViewTransaction);
+        recycleAdapterTransaction = new RecycleAdapterTransaction(TransactionActivity.this, mListTransaction);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(recycleAdapterTransaction);
@@ -96,7 +102,7 @@ public class TransactionActivity extends AppCompatActivity implements SearchView
         httpClient.addInterceptor(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
-                Request request = chain.request().newBuilder().addHeader("Authorization", "Bearer "+token).build();
+                Request request = chain.request().newBuilder().addHeader("Authorization", "Bearer " + token).build();
                 return chain.proceed(request);
             }
         });
@@ -109,7 +115,7 @@ public class TransactionActivity extends AppCompatActivity implements SearchView
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(TransactionActivity.this);
-                View mView = getLayoutInflater().inflate(R.layout.dialog_add_transaction,null);
+                View mView = getLayoutInflater().inflate(R.layout.dialog_add_transaction, null);
 
                 loadSpinnerCities(httpClient);
                 loadSpinnerCabang(httpClient);
@@ -121,18 +127,45 @@ public class TransactionActivity extends AppCompatActivity implements SearchView
                 txtNameTrans = mView.findViewById(R.id.txtNameTrans);
                 txtAddressTrans = mView.findViewById(R.id.txtAddressTrans);
                 txtPhoneTrans = mView.findViewById(R.id.txtPhoneTrans);
+                switchKonsumenBaru = mView.findViewById(R.id.switchKonsumenBaru);
+
+                //Cek Switch
+                switchKonsumenBaru.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                        if (isChecked) {
+                            // Konsumen Lama
+                            spinnerCity.setVisibility(View.GONE);
+                            txtNameTrans.setVisibility(View.GONE);
+                            txtAddressTrans.setVisibility(View.GONE);
+                            cekKonsumenBaru = false;
+                        } else {
+                            // Konsumen Baru
+                            spinnerCity.setVisibility(View.VISIBLE);
+                            txtNameTrans.setVisibility(View.VISIBLE);
+                            txtAddressTrans.setVisibility(View.VISIBLE);
+                            cekKonsumenBaru = true;
+                        }
+                    }
+                });
+
 
                 mBuilder.setView(mView)
                         .setPositiveButton("Tambah", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //Tambah
-                                addNewTransaction(httpClient);
+                                //Tambah dan Cek Konsumen Baru
+                                if (cekKonsumenBaru) {
+                                    addNewTransaction(httpClient);
+                                } else {
+                                    getCustomerByPhone(httpClient);
+                                }
                             }
                         }).setNegativeButton("Batal", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Batal
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Batal
                     }
                 });
 
@@ -149,8 +182,7 @@ public class TransactionActivity extends AppCompatActivity implements SearchView
         return true;
     }
 
-    public void loadSpinnerCities(OkHttpClient.Builder httpClient)
-    {
+    public void loadSpinnerCities(OkHttpClient.Builder httpClient) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(httpClient.build())
@@ -163,13 +195,13 @@ public class TransactionActivity extends AppCompatActivity implements SearchView
             @Override
             public void onResponse(Call<List<CitiesDAO>> call, retrofit2.Response<List<CitiesDAO>> response) {
                 List<CitiesDAO> citiesDAOS = response.body();
-                for(int i=0; i < citiesDAOS.size(); i++ ){
+                for (int i = 0; i < citiesDAOS.size(); i++) {
                     String name = citiesDAOS.get(i).getNameCities();
                     listSpinnerCity.add(name);
                 }
-                listSpinnerCity.add(0,"-SELECT NAME CITY-");
+                listSpinnerCity.add(0, "-SELECT NAME CITY-");
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(TransactionActivity.this,
-                        android.R.layout.simple_spinner_item,listSpinnerCity);
+                        android.R.layout.simple_spinner_item, listSpinnerCity);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerCity.setAdapter(adapter);
             }
@@ -179,6 +211,42 @@ public class TransactionActivity extends AppCompatActivity implements SearchView
 
             }
         });
+    }
+
+    public void getCustomerByPhone(final OkHttpClient.Builder httpClient) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(httpClient.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiClient apiClient = retrofit.create(ApiClient.class);
+        Call<KonsumenDAO> transaction = apiClient.getCekKonsumen(txtPhoneTrans.getText().toString());
+
+        transaction.enqueue(new Callback<KonsumenDAO>() {
+            @Override
+            public void onResponse(Call<KonsumenDAO> call, retrofit2.Response<KonsumenDAO> response) {
+                KonsumenDAO hasil = response.body();
+
+                if(hasil==null)
+                {
+                    Toasty.error(TransactionActivity.this, "Konsumen Tidak Ditemukan",
+                            Toast.LENGTH_SHORT, true).show();
+                }
+                else
+                {
+                    // Add Data Transaction
+                    addNewTransactionOldCustomer(httpClient,hasil.getNameKonsumen(),hasil.getPhoneKonsumen(),hasil.getAddressKonsumen(),
+                            hasil.getCityKonsumen());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<KonsumenDAO> call, Throwable t) {
+                Toasty.error(TransactionActivity.this, "Konsumen Tidak Ditemukan",
+                        Toast.LENGTH_SHORT, true).show();
+            }
+        });
+
     }
 
     public void loadSpinnerCabang(OkHttpClient.Builder httpClient)
@@ -247,6 +315,49 @@ public class TransactionActivity extends AppCompatActivity implements SearchView
         });
     }
 
+    public void addNewTransactionOldCustomer(final OkHttpClient.Builder httpClient, String nama, String phone, String address,
+                                  String city){
+
+        String idCabang = spinnerCabang.getSelectedItem().toString();
+        String inputIDCabang = Character.toString(idCabang.charAt(0));
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(httpClient.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiClient apiClient = retrofit.create(ApiClient.class);
+        Call<TransactionDAO> transactionDAOCall = apiClient.addTransaction(nama,phone
+        ,address,city,inputIDCabang,"konsumen",spinnerJenisTrans.getSelectedItem().toString());
+
+        transactionDAOCall.enqueue(new Callback<TransactionDAO>() {
+            @Override
+            public void onResponse(Call<TransactionDAO> call, retrofit2.Response<TransactionDAO> response) {
+
+                if(response.isSuccessful())
+                {
+                    Toasty.success(TransactionActivity.this, "Transaksis Berhasil Ditambah",
+                            Toast.LENGTH_SHORT, true).show();
+
+                    Intent intent = new Intent(TransactionActivity.this,DasboardActivity.class);
+                    startActivity(intent);
+                }
+                else{
+
+                    Toasty.error(TransactionActivity.this, "Gagal Menambahkan Data",
+                            Toast.LENGTH_SHORT, true).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<TransactionDAO> call, Throwable t) {
+                Toasty.error(TransactionActivity.this, t.getMessage(),
+                        Toast.LENGTH_SHORT, true).show();
+            }
+        });
+    }
+
     public void addNewTransaction(final OkHttpClient.Builder httpClient){
 
         String idCabang = spinnerCabang.getSelectedItem().toString();
@@ -259,7 +370,7 @@ public class TransactionActivity extends AppCompatActivity implements SearchView
                 .build();
         ApiClient apiClient = retrofit.create(ApiClient.class);
         Call<TransactionDAO> transactionDAOCall = apiClient.addTransaction(txtNameTrans.getText().toString(),txtPhoneTrans.getText().toString()
-        ,txtAddressTrans.getText().toString(),spinnerCity.getSelectedItem().toString(),inputIDCabang,"konsumen"
+                ,txtAddressTrans.getText().toString(),spinnerCity.getSelectedItem().toString(),inputIDCabang,"konsumen"
                 ,spinnerJenisTrans.getSelectedItem().toString());
 
         transactionDAOCall.enqueue(new Callback<TransactionDAO>() {

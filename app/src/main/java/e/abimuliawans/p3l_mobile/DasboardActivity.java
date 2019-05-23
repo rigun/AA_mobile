@@ -85,7 +85,7 @@ public class DasboardActivity extends AppCompatActivity {
         //Notification
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,CHANNEL_NAME, NotificationManager.IMPORTANCE_MAX);
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription(CHANNEL_DECS);
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(channel);
@@ -105,7 +105,7 @@ public class DasboardActivity extends AppCompatActivity {
                 else
                 {
                     //Show Notification
-                    displayNotification();
+                    //displayNotification();
                 }
             }
         }, 5000);

@@ -110,6 +110,11 @@ public class RecycleAdapterTransactionDetail extends RecyclerView.Adapter<Recycl
                 cardViewLayanan.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        SharedPreferences prefIDTransDetail = context.getSharedPreferences("MyIdDetailTrans", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefIDTransDetail.edit();
+                        editor.putString("id_detail_trans", trans.getIdDetailTransaction());
+                        editor.commit();
+
                         Intent intent = new Intent(context,DetailLayananActivity.class);
                         context.startActivity(intent);
                     }

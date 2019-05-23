@@ -3,6 +3,8 @@ package e.abimuliawans.p3l_mobile;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Comparator;
+
 public class StokSparepartDAO {
     @SerializedName("id")
     @Expose
@@ -47,6 +49,20 @@ public class StokSparepartDAO {
         this.stockScp = stockScp;
         this.limitstockScp = limitstockScp;
     }
+
+    public static final Comparator<StokSparepartDAO> BY_HARGA_SORT = new Comparator<StokSparepartDAO>() {
+        @Override
+        public int compare(StokSparepartDAO o1, StokSparepartDAO o2) {
+            return o2.sellScp.compareTo(o1.sellScp);
+        }
+    };
+
+    public static final Comparator<StokSparepartDAO> BY_HARGA_SORT_MURAH = new Comparator<StokSparepartDAO>() {
+        @Override
+        public int compare(StokSparepartDAO o1, StokSparepartDAO o2) {
+            return o1.sellScp.compareTo(o2.sellScp);
+        }
+    };
 
     public String getIdScp() {
         return idScp;

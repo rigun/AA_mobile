@@ -74,23 +74,19 @@ public class RecycleAdapterTransaction extends RecyclerView.Adapter<RecycleAdapt
         myViewHolder.mPayment.setText("Payment :"+transactionByCabangDAO.getPayment());
         myViewHolder.mDiskon.setText("Diskon :"+transactionByCabangDAO.getDiskon());
 
-        //Set Progres View Button, Cek Status, and Send Status to Detail
-        String statusTransaction = transactionByCabangDAO.getStatus();
-        SharedPreferences prefStatus = context.getSharedPreferences("MyStatus", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefStatus.edit();
-        editor.putString("status", statusTransaction);
-        editor.commit();
-
-        if(statusTransaction.equals("3"))
+        if(transactionByCabangDAO.getStatus().equals("3"))
         {
             //Selesai
             myViewHolder.btnStatus.setBackgroundResource(R.drawable.btn_progres_selesai);
             myViewHolder.btnStatus.setText("Selesai");
         }
-        else if(statusTransaction.equals("0"))
+        else if(transactionByCabangDAO.getStatus().equals("0"))
         {
             //Pengisisan Data
+            myViewHolder.btnStatus.setBackgroundResource(R.drawable.btn_progres_pengisisan_data);
+            myViewHolder.btnStatus.setText("Pengisisan Data");
         }
+
 
         //Get Token
         SharedPreferences pref = context.getSharedPreferences("MyToken", MODE_PRIVATE);
@@ -121,6 +117,13 @@ public class RecycleAdapterTransaction extends RecyclerView.Adapter<RecycleAdapt
                 final String string = transactionByCabangDAO.getTransactionNumber();
                 final String[] parts = string.split("-");
                 final String partTipeTransaction = parts[0]; // SS,SV,SP
+
+                //Set Progres View Button, Cek Status, and Send Status to Detail
+                String statusTransaction = transactionByCabangDAO.getStatus();
+                SharedPreferences prefStatus = context.getSharedPreferences("MyStatus", MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefStatus.edit();
+                editor.putString("status", statusTransaction);
+                editor.commit();
 
                 // Cek Status
                 CardView tambahDetail = mView.findViewById(R.id.cardViewAddDetailTrans);

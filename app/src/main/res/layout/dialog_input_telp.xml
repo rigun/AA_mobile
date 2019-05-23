@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:id="@+id/textNamaVeh"
-        android:text="Tambah Pesanan"
+        android:text="Masukan No Telpon"
         android:textColor="#172646"
         android:fontFamily="@font/mm"
         android:textStyle="bold"
@@ -25,48 +25,28 @@
         android:layout_marginTop="20dp">
 
         <EditText
-            android:id="@+id/txtUnitOrder"
+            android:id="@+id/inputNomorTelponKonsumen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="number"
             android:layout_marginTop="20dp"
             android:ems="10"
-            android:hint="Unit Pesanan" />
+            android:hint="No Telp" />
 
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_height="wrap_content">
 
         <EditText
-            android:id="@+id/txtTotalOrder"
+            android:id="@+id/inputNomorPlatKonsumen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:ems="10"
             android:inputType="number"
-            android:hint="Total Pesanan" />
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:hint="Nomor Plat" />
 
     </android.support.design.widget.TextInputLayout>
-
-    <Spinner
-        android:id="@+id/spinnerChooseSupplier"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp">
-    </Spinner>
-    <Spinner
-        android:id="@+id/spinnerAddCabangOrder"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp">
-    </Spinner>
-    <Spinner
-        android:id="@+id/spinnerSparepartOrder"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp">
-    </Spinner>
-
 </LinearLayout>

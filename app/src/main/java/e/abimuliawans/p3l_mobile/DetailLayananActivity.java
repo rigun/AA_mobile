@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.icu.util.Output;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -47,6 +48,7 @@ public class DetailLayananActivity extends AppCompatActivity {
     private RecycleAdapterDetailLayanan recycleAdapterDetailLayanan;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView recyclerView;
+    public Integer compareService,temp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,10 +117,11 @@ public class DetailLayananActivity extends AppCompatActivity {
                                 String spinnerService = spinnerIdService.getSelectedItem().toString();
                                 String inputService = Character.toString(spinnerService.charAt(0));
 
-                                addDetailLayanan(httpClient,idDetailTrans,inputService,txtTotal.getText().toString());
+                                    addDetailLayanan(httpClient,idDetailTrans,inputService,txtTotal.getText().toString());
 
-                                listSpinnerIDService.clear();
-                                spinnerIdService.setAdapter(null);
+                                    listSpinnerIDService.clear();
+                                    spinnerIdService.setAdapter(null);
+
 
                             }
                         }).setNegativeButton("Batal", new DialogInterface.OnClickListener() {
@@ -229,4 +232,6 @@ public class DetailLayananActivity extends AppCompatActivity {
         });
 
     }
+
+
 }

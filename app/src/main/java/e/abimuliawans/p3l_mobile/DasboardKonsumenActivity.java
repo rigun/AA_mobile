@@ -1,11 +1,16 @@
 package e.abimuliawans.p3l_mobile;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +20,7 @@ public class DasboardKonsumenActivity extends AppCompatActivity {
     private TextView pagetitle,pagesubtitle,txtFab;
     private ImageView imageView3,imgSparepart,imgCabang, imgHistory,imgAboutUs;
     private String token,BASE_URL;
+    private EditText txtNoTelponKonsumen,txtNoPlat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,5 +46,40 @@ public class DasboardKonsumenActivity extends AppCompatActivity {
         imageView3.startAnimation(atg);
         pagetitle.startAnimation(atgtwo);
         pagesubtitle.startAnimation(atgtwo);
+
+        //On Click History
+        imgHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Alert No Telpon
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(DasboardKonsumenActivity.this);
+                View mView = getLayoutInflater().inflate(R.layout.dialog_input_telp,null);
+
+                //Set Edit Text
+                txtNoTelponKonsumen = mView.findViewById(R.id.inputNomorTelponKonsumen);
+                txtNoPlat = mView.findViewById(R.id.inputNomorPlatKonsumen);
+
+                mBuilder.setView(mView)
+                        .setPositiveButton("Lanjut", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Lanjut
+                                Intent intent = new Intent(DasboardKonsumenActivity.this,KendaraanKonsmenActivity.class);
+                                startActivity(intent);
+
+                            }
+                        }).setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //Batal
+                    }
+                });
+
+
+                AlertDialog dialog = mBuilder.create();
+                dialog.show();
+
+            }
+        });
     }
 }

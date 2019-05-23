@@ -3,40 +3,32 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="5dp">
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:id="@+id/textNamaSales"
-        android:text="Tambah Transaksi"
+        android:text="Edit Sparepart Cabang"
         android:textColor="#172646"
         android:fontFamily="@font/mm"
         android:textStyle="bold"
         android:textSize="20sp"
         android:layout_gravity="center"/>
 
-    <Switch
-        android:id="@+id/switchKonsumenBaru"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        android:text="Konsumen Terdaftar  "/>
-
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
 
         <EditText
-            android:id="@+id/txtNameTrans"
+            android:id="@+id/txtSparepart_codeEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:ems="10"
-            android:hint="Nama Konsumen" />
+            android:hint="Code Sparepart" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -45,13 +37,13 @@
         android:layout_marginTop="10dp">
 
         <EditText
-            android:id="@+id/txtPhoneTrans"
+            android:id="@+id/txtPositionEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:ems="10"
             android:inputType="phone"
-            android:hint="Phone Konsumen" />
+            android:hint="Position" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -60,34 +52,54 @@
         android:layout_marginTop="10dp">
 
         <EditText
-            android:id="@+id/txtAddressTrans"
+            android:id="@+id/txtLimitStokEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:ems="10"
-            android:hint="Alamat Konsumen" />
+            android:hint="Limit Stock" />
     </android.support.design.widget.TextInputLayout>
 
-    <Spinner
-        android:id="@+id/spinnerCityTrans"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp">
-    </Spinner>
-    <Spinner
-        android:id="@+id/spinnerCabangTrans"
+
+        <EditText
+            android:id="@+id/txtBuyEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:hint="Harga Beli" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp">
-    </Spinner>
-    <Spinner
-        android:id="@+id/spinnerJenisTrans"
+
+        <EditText
+            android:id="@+id/txtSellEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:hint="Harga Jual" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:entries="@array/arrayJenisTrans"
-        android:prompt="@array/arrayJenisTrans"
-        android:focusable="false"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp">
-    </Spinner>
+
+        <EditText
+            android:id="@+id/txtStockEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:hint="Stock" />
+    </android.support.design.widget.TextInputLayout>
 
 </LinearLayout>

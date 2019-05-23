@@ -1,6 +1,8 @@
 package e.abimuliawans.p3l_mobile;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
@@ -91,8 +93,25 @@ public class PemesananActivity extends AppCompatActivity implements SearchView.O
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(PemesananActivity.this,CabangActivity.class);
-                startActivity(intent);
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(PemesananActivity.this);
+                View mView = getLayoutInflater().inflate(R.layout.dialog_add_order, null);
+
+                mBuilder.setView(mView)
+                        .setPositiveButton("Tambah", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Tambah dan Cek Konsumen Baru
+
+                            }
+                        }).setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Batal
+                    }
+                });
+
+                AlertDialog dialog = mBuilder.create();
+                dialog.show();
             }
         });
 

@@ -13,7 +13,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DasboardKonsumenActivity"></activity>
+        <activity android:name=".KendaraanKonsmenActivity"></activity>
+        <activity android:name=".RiwayatKonsumenActivity" />
+        <activity android:name=".SparepartWithCabangActivity" />
+        <activity android:name=".DasboardKonsumenActivity" />
         <activity android:name=".StokSparepartActivity" />
         <activity android:name=".DetailLayananActivity" />
         <activity android:name=".DetailSparepartActivity" />

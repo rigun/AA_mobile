@@ -102,7 +102,7 @@ public class RecycleAdapterDetailLayanan extends RecyclerView.Adapter<RecycleAda
                 @Override
                 public void onClick(View v) {
                     //New Alert
-                    AlertDialog.Builder builderSal = new AlertDialog.Builder(context);
+                    final AlertDialog.Builder builderSal = new AlertDialog.Builder(context);
                     builderSal.setTitle("Pilih Pengaturan :");
                     builderSal.setMessage(myViewHolder.mName.getText().toString());
                     builderSal.setCancelable(true);
@@ -158,6 +158,9 @@ public class RecycleAdapterDetailLayanan extends RecyclerView.Adapter<RecycleAda
                                 public void onClick(DialogInterface dialog, int which) {
                                     //Delete
                                     deleteDetailService(httpClient,BASE_URL,detailLayananDAO.getIdDetailLayanan());
+                                    AlertDialog alertDialog = builderSal.create();
+                                    alertDialog.cancel();
+
                                 }
                             });
 
@@ -238,6 +241,7 @@ public class RecycleAdapterDetailLayanan extends RecyclerView.Adapter<RecycleAda
         });
     }
 
+
     public void deleteDetailService(OkHttpClient.Builder httpClient, String BASE_URL, String idTrans)
     {
         Retrofit retrofit = new Retrofit.Builder()
@@ -257,8 +261,6 @@ public class RecycleAdapterDetailLayanan extends RecyclerView.Adapter<RecycleAda
                     Toasty.success(context, "Detail Berhasil Dihapus",
                             Toast.LENGTH_SHORT, true).show();
 
-                    Intent intent = new Intent(context,DasboardActivity.class);
-                    context.startActivity(intent);
                 }
                 else{
 
@@ -273,8 +275,6 @@ public class RecycleAdapterDetailLayanan extends RecyclerView.Adapter<RecycleAda
                 Toasty.warning(context,"Data Detail Terhapus",
                         Toast.LENGTH_SHORT, true).show();
 
-                Intent intent = new Intent(context,DasboardActivity.class);
-                context.startActivity(intent);
             }
         });
     }

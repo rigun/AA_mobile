@@ -15,6 +15,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
@@ -215,7 +216,10 @@ public interface ApiClient {
     // Detail Sparepart =============================================================================
 
     @GET("sparepartBranch/{branchId}")
-    Call<List<SparepartCabangSupDAO>> getSparepartCabang(@Path("branchId") String transactionId);
+    Call<List<SparepartCabangSupDAO>> getSparepartCabang(@Path("branchId") String branchId);
+
+    @GET("sparepartBranch/{branchId}")
+    Call<List<StokSparepartDAO>> getSparepartWithCabang(@Path("branchId") String branchId);
 
     @GET("detailTSp/{transactionDetailId}/{branchId}")
     Call<List<TransactionDAO>> getDetailSparepart(@Path("transactionDetailId") String transactionDetailId,
@@ -264,4 +268,33 @@ public interface ApiClient {
 
     @GET("sparepartKurang")
     Call<List<StokSparepartDAO>> getStokKurang();
+
+    @PATCH("sparepartBranch/{spBrID}")
+    @FormUrlEncoded
+    Call<StokSparepartDAO> editSparepartCabang(@Path("spBrID") String idSparepart,
+                                               @Field("sparepart_code") String sparepart_code,
+                                               @Field("position") String position,
+                                               @Field("limitstock") String limitstock,
+                                               @Field("sell") String sell,
+                                               @Field("buy") String buy,
+                                               @Field("stock") String stock);
+
+    // Transaksi Konsumen ===========================================================================
+
+    @GET("support/myTransaction/{cVehicleId}/{phoneNumber}")
+    Call<ValueTransaksiKonsumen> getTransactionKonsumen(@Path("cVehicleId") String idKendaraan,
+                                                        @Path("phoneNumber") String noTelp);
+
+
+    @GET("support/myVehicle/{idCustomer}")
+    Call<KendaraanKonsumenDAO> getKendaraanKonsumen(@Path("idCustomer") String idCustomer);
+
+    @GET("cekPhoneNumber/{phoneNumber}")
+    Call<KonsumenDAO> getCekKonsumen(@Path("phoneNumber") String phoneNumber);
+
+    @POST("support/myTransaction")
+    @FormUrlEncoded
+    Call<DetailLayananDAO> callBackTransaction(@Field("phoneNumber") String phone,
+                                               @Field("licensePlate") String plat);
+
 }
