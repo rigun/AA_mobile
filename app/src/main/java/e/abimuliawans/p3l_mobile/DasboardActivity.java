@@ -1,6 +1,7 @@
 package e.abimuliawans.p3l_mobile;
 
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -10,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -47,14 +49,16 @@ public class DasboardActivity extends AppCompatActivity {
     private Animation atg, atgtwo, atgthree, fabOpen, fabClose, fabClockwise, fabAntiClockwise
             ,cardOpen,cardClose;
     private TextView pagetitle,pagesubtitle,txtFab;
-    private CardView cardViewVeh,cardViewLogout,cardViewSales,cardViewKonsumen;
+    private CardView cardViewVeh,cardViewLogout,cardViewSales,cardViewKonsumen,cardViewReportPerbulan,cardViewReportPengeluaran,
+    cardViewReportStok;
     private ImageView imageView3,imgSparepart,imgSupplier, imgPemesanan,imgTransaksi;
-    private FloatingActionButton fabMenuLainya,fabVehicle,fabLogout,fabSales,fabKonsumen;
+    private FloatingActionButton fabMenuLainya,fabVehicle,fabLogout,fabSales,fabKonsumen,fabReport;
     private String token,BASE_URL;
-    private Spinner spinnerCabang;
+    private Spinner spinnerCabang,spinnerTahunPengeluaran,spinnerTahunPendapatan,spinnerTahunSparepartTer;
     private List<String> listSpinnerCabang = new ArrayList<String>();
     private List<StokSparepartDAO> listStokSparepart;
     private boolean isOpen = false;
+    private DownloadManager downloadManager;
 
     //Channel Notification
     private static final String CHANNEL_ID = "notifikasi_stok_kurang";
@@ -230,6 +234,7 @@ public class DasboardActivity extends AppCompatActivity {
         cardViewKonsumen = findViewById(R.id.cardViewFab4);
 
         fabMenuLainya= findViewById(R.id.btnMenuLainya);
+        fabReport= findViewById(R.id.btnMenuReport);
         fabVehicle= findViewById(R.id.btnMenuVehicle);
         fabLogout= findViewById(R.id.btnMenuLogOut);
         fabSales = findViewById(R.id.btnMenuSales);
@@ -281,6 +286,118 @@ public class DasboardActivity extends AppCompatActivity {
                     cardViewKonsumen.setAnimation(cardOpen);
                     isOpen=true;
                 }
+            }
+        });
+
+        fabReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(DasboardActivity.this);
+                View mView = getLayoutInflater().inflate(R.layout.dialog_option_report,null);
+
+                cardViewReportPengeluaran = mView.findViewById(R.id.cardViewPengeluaranPerbulan);
+                cardViewReportPerbulan = mView.findViewById(R.id.cardViewPendapatanPerbulan);
+                cardViewReportStok = mView.findViewById(R.id.cardViewSparepartTerlaris);
+
+                mBuilder.setView(mView)
+                        .setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Batal
+                            }
+                        });
+
+                final AlertDialog dialog = mBuilder.create();
+                dialog.show();
+
+                cardViewReportPengeluaran.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Fungsi Report
+                        dialog.cancel();
+                        AlertDialog.Builder mBuilderYearsPengeluaran = new AlertDialog.Builder(DasboardActivity.this);
+                        View mViewYearsPegeluaran = getLayoutInflater().inflate(R.layout.dialog_input_tahun,null);
+                        spinnerTahunPengeluaran = mViewYearsPegeluaran.findViewById(R.id.spinnerTahunReport);
+
+                        mBuilderYearsPengeluaran.setView(mViewYearsPegeluaran)
+                                .setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //Batal
+                                    }
+                                })
+                                .setPositiveButton("Pilih", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //Pilih
+                                        downloadRepotPengeluaran(spinnerTahunPengeluaran.getSelectedItem().toString());
+                                    }
+                                });
+
+                        AlertDialog dialogPengeluaran = mBuilderYearsPengeluaran.create();
+                        dialogPengeluaran.show();
+
+                    }
+                });
+
+                cardViewReportStok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Fungsi Report
+                        dialog.cancel();
+                        AlertDialog.Builder mBuilderYearsStok = new AlertDialog.Builder(DasboardActivity.this);
+                        View mViewYearsStok = getLayoutInflater().inflate(R.layout.dialog_input_tahun,null);
+                        spinnerTahunSparepartTer = mViewYearsStok.findViewById(R.id.spinnerTahunReport);
+
+                        mBuilderYearsStok.setView(mViewYearsStok)
+                                .setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //Batal
+                                    }
+                                })
+                                .setPositiveButton("Pilih", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //Pilih
+                                        downloadRepotSparepartTerlaris(spinnerTahunSparepartTer.getSelectedItem().toString());
+                                    }
+                                });
+
+                        AlertDialog dialogStok = mBuilderYearsStok.create();
+                        dialogStok.show();
+                    }
+                });
+
+                cardViewReportPerbulan.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Fugsi Report
+                        dialog.cancel();
+                        AlertDialog.Builder mBuilderYearsPendapatan = new AlertDialog.Builder(DasboardActivity.this);
+                        View mViewYearsPendapatan = getLayoutInflater().inflate(R.layout.dialog_input_tahun,null);
+                        spinnerTahunPendapatan = mViewYearsPendapatan.findViewById(R.id.spinnerTahunReport);
+
+                        mBuilderYearsPendapatan.setView(mViewYearsPendapatan)
+                                .setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //Batal
+                                    }
+                                })
+                                .setPositiveButton("Pilih", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //Pilih
+                                        downloadRepotPerbulan(spinnerTahunPendapatan.getSelectedItem().toString());
+                                    }
+                                });
+
+                        AlertDialog dialogPendapatan = mBuilderYearsPendapatan.create();
+                        dialogPendapatan.show();
+                    }
+                });
+
             }
         });
 
@@ -341,6 +458,39 @@ public class DasboardActivity extends AppCompatActivity {
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
         notificationManagerCompat.notify(1,mBuilder.build());
+    }
+
+    public void downloadRepotPerbulan(String years)
+    {
+        downloadManager = (DownloadManager)getSystemService(Context.DOWNLOAD_SERVICE);
+        Uri uri = Uri.parse(BASE_URL+"pendapatanbulanan/report/"+years);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        Long reference = downloadManager.enqueue(request);
+        Toasty.success(DasboardActivity.this, "Download Report....",
+                Toast.LENGTH_SHORT, true).show();
+    }
+
+    public void downloadRepotPengeluaran(String years)
+    {
+        downloadManager = (DownloadManager)getSystemService(Context.DOWNLOAD_SERVICE);
+        Uri uri = Uri.parse(BASE_URL+"pengeluaranbulanan/report/"+years);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        Long reference = downloadManager.enqueue(request);
+        Toasty.success(DasboardActivity.this, "Download Report....",
+                Toast.LENGTH_SHORT, true).show();
+    }
+
+    public void downloadRepotSparepartTerlaris(String years)
+    {
+        downloadManager = (DownloadManager)getSystemService(Context.DOWNLOAD_SERVICE);
+        Uri uri = Uri.parse(BASE_URL+"sparepartTerlaris/report/"+years);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        Long reference = downloadManager.enqueue(request);
+        Toasty.success(DasboardActivity.this, "Download Report....",
+                Toast.LENGTH_SHORT, true).show();
     }
 
     public void setStokKurang(OkHttpClient.Builder httpClient)

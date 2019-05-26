@@ -316,6 +316,20 @@
             app:fabSize="normal"
             app:pressedTranslationZ="12dp" />
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btnMenuReport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/icon_report"
+            android:backgroundTint="#3f51b5"
+            app:elevation="6dp"
+            app:fabSize="normal"
+            app:pressedTranslationZ="12dp" />
+
         <android.support.v7.widget.CardView
             android:id="@+id/cardViewFab1"
             android:layout_width="wrap_content"

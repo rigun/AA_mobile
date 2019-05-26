@@ -106,7 +106,7 @@ public class TambahPemasananActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ApiClient apiClient = retrofit.create(ApiClient.class);
-        Call<OrderDAO> orderDAOCall = apiClient.addOrder(inputIdSupplier,inputICabang,inputCode,inputUnit,inputTotal);
+        Call<OrderDAO> orderDAOCall = apiClient.addOrder("1",inputICabang,inputCode,inputUnit,"1");
         orderDAOCall.enqueue(new Callback<OrderDAO>() {
             @Override
             public void onResponse(Call<OrderDAO> call, Response<OrderDAO> response) {

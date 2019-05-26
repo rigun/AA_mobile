@@ -18,12 +18,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -44,6 +49,10 @@ public class PemesananActivity extends AppCompatActivity implements SearchView.O
     private FloatingActionButton floatingActionButton;
     private String token,BASE_URL,inputIDcabang;
     private Integer integerIDCabang;
+    private EditText unitOrder,totalOrder;
+    private Spinner spinnerSupplier,spinnerSparepart;
+    private List<String> listSpinnerCode = new ArrayList<>();
+    private List<String> listSpinnerSupplier = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,11 +105,21 @@ public class PemesananActivity extends AppCompatActivity implements SearchView.O
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(PemesananActivity.this);
                 View mView = getLayoutInflater().inflate(R.layout.dialog_add_order, null);
 
+                spinnerSparepart = mView.findViewById(R.id.spinnerSparepartOrder);
+                spinnerSupplier = mView.findViewById(R.id.spinnerChooseSupplier);
+                totalOrder = mView.findViewById(R.id.txtTotalOrder);
+                unitOrder = mView.findViewById(R.id.txtUnitOrder);
+
+                //Load Code Sparepart and Supplier
+                loadCodeSparepartSpinner(httpClient,inputIDcabang);
+                loadIDSupplier(httpClient);
+
                 mBuilder.setView(mView)
                         .setPositiveButton("Tambah", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //Tambah dan Cek Konsumen Baru
+                                addOrder(httpClient);
 
                             }
                         }).setNegativeButton("Batal", new DialogInterface.OnClickListener() {
@@ -151,6 +170,8 @@ public class PemesananActivity extends AppCompatActivity implements SearchView.O
             @Override
             public void onFailure(Call<List<ShowPemesananDAO>> call, Throwable t) {
                 //
+                Toasty.error(PemesananActivity.this, t.getMessage(),
+                        Toast.LENGTH_SHORT, true).show();
             }
         });
     }
@@ -174,5 +195,103 @@ public class PemesananActivity extends AppCompatActivity implements SearchView.O
     public boolean onQueryTextChange(String s) {
         recycleAdapterPemesanan.getFilter().filter(s);
         return false;
+    }
+
+    public void addOrder(OkHttpClient.Builder httpClientAdd) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(httpClientAdd.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiClient apiClient = retrofit.create(ApiClient.class);
+        Call<OrderDAO> orderDAOCall = apiClient.addOrder(spinnerSupplier.getSelectedItem().toString(),
+                integerIDCabang,spinnerSparepart.getSelectedItem().toString(),unitOrder.getText().toString(),
+                totalOrder.getText().toString());
+        orderDAOCall.enqueue(new Callback<OrderDAO>() {
+            @Override
+            public void onResponse(Call<OrderDAO> call, retrofit2.Response<OrderDAO> response) {
+                Toasty.success(PemesananActivity.this, "Pemesanan Berhasil Ditambah",
+                        Toast.LENGTH_SHORT, true).show();
+
+                Intent intent = new Intent(PemesananActivity.this,DasboardActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(Call<OrderDAO> call, Throwable t) {
+                Toasty.error(PemesananActivity.this, "Gagal Menambah Data",
+                        Toast.LENGTH_SHORT, true).show();
+            }
+        });
+
+    }
+
+    private void loadCodeSparepartSpinner(OkHttpClient.Builder httpClient, String id_cabang) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(httpClient.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiClient apiClient = retrofit.create(ApiClient.class);
+        Call<List<SparepartCabangSupDAO>> sparepartCabang = apiClient.getSparepartCabang(id_cabang);
+
+        sparepartCabang.enqueue(new Callback<List<SparepartCabangSupDAO>>() {
+            @Override
+            public void onResponse(Call<List<SparepartCabangSupDAO>> call, retrofit2.Response<List<SparepartCabangSupDAO>> response) {
+                List<SparepartCabangSupDAO> sparepartDAOS = response.body();
+                for(int i=0; i < sparepartDAOS.size(); i++)
+                {
+                    String code = sparepartDAOS.get(i).getCodeSpareScp();
+                    listSpinnerCode.add(code);
+                }
+                listSpinnerCode.add(0,"-SELECT CODE-");
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(PemesananActivity.this,
+                        android.R.layout.simple_spinner_item,listSpinnerCode);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerSparepart.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<SparepartCabangSupDAO>> call, Throwable t) {
+                //
+                Toasty.error(PemesananActivity.this, t.getMessage(),
+                        Toast.LENGTH_SHORT, true).show();
+            }
+        });
+    }
+
+    public void loadIDSupplier(OkHttpClient.Builder httpClient){
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(httpClient.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiClient apiClient = retrofit.create(ApiClient.class);
+        Call<ValueSupplier> apiClientSupplier = apiClient.getSupplier();
+
+        apiClientSupplier.enqueue(new Callback<ValueSupplier>() {
+            @Override
+            public void onResponse(Call<ValueSupplier> call, retrofit2.Response<ValueSupplier> response) {
+                List<SupplierDAO> supplierDAOList = response.body().getResult();
+                for(int i=0; i < supplierDAOList.size(); i++)
+                {
+                    String id = supplierDAOList.get(i).getIdSupplier();
+                    String name = supplierDAOList.get(i).getNameSupplier();
+                    String input = id+"-"+name;
+                    listSpinnerSupplier.add(input);
+                }
+                listSpinnerSupplier.add(0,"-SELECT SUPPLIER-");
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(PemesananActivity.this,
+                        android.R.layout.simple_spinner_item,listSpinnerSupplier);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerSupplier.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(Call<ValueSupplier> call, Throwable t) {
+                //
+            }
+        });
     }
 }

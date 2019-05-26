@@ -3,6 +3,8 @@ package e.abimuliawans.p3l_mobile;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class ShowPemesananDAO {
 
     @SerializedName("id")
@@ -20,6 +22,10 @@ public class ShowPemesananDAO {
     @SerializedName("created_at")
     @Expose
     public String tanggalPemesanan;
+
+    @SerializedName("detail")
+    @Expose
+    public List<DetailOrderDAO> detailPemesanan;
 
 
     public ShowPemesananDAO(String idPemesanan, String idSupplierPemesanan, String idCabangPemesanan, String tanggalPemesanan) {
@@ -59,5 +65,9 @@ public class ShowPemesananDAO {
 
     public void setTanggalPemesanan(String tanggalPemesanan) {
         this.tanggalPemesanan = tanggalPemesanan;
+    }
+
+    public List<DetailOrderDAO> getDetailPemesanan() {
+        return detailPemesanan;
     }
 }

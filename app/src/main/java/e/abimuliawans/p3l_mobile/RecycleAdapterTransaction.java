@@ -521,7 +521,8 @@ public class RecycleAdapterTransaction extends RecyclerView.Adapter<RecycleAdapt
                 String filterPatten = constraint.toString().toLowerCase().trim();
 
                 for(TransactionByCabangDAO transaction : listFull){
-                    if (transaction.getTransactionNumber().toLowerCase().contains(filterPatten)){
+                    if (transaction.getTransactionNumber().toLowerCase().contains(filterPatten) ||
+                            transaction.getIdTransaction().toLowerCase().contains(filterPatten)){
                         filterList.add(transaction);
                     }
                 }

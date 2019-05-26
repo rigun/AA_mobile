@@ -58,8 +58,10 @@ public class RecycleAdapterPemesanan extends RecyclerView.Adapter<RecycleAdapter
     public void onBindViewHolder(final RecycleAdapterPemesanan.MyViewHolder myViewHolder, int i) {
         ShowPemesananDAO dataDAO = result.get(i);
         myViewHolder.mIdOrder.setText(dataDAO.getIdPemesanan());
-        myViewHolder.mIdSupplier.setText(dataDAO.getIdSupplierPemesanan());
-        myViewHolder.mIdCabang.setText(dataDAO.getIdCabangPemesanan());
+        myViewHolder.mIdSupplier.setText("Pesanan : "+dataDAO.getDetailPemesanan().get(0).getSparepartDetail());
+        myViewHolder.mIdCabang.setText("Unit : "+dataDAO.getDetailPemesanan().get(0).getUnit());
+        myViewHolder.mTotal.setText("Total Pesan : "+dataDAO.getDetailPemesanan().get(0).getTotalDetail());
+        myViewHolder.mHarga.setText("Harga :"+dataDAO.getDetailPemesanan().get(0).getBuy());
         myViewHolder.mtanggal.setText("Tanggal : "+dataDAO.getTanggalPemesanan());
 
         //Get Token
@@ -162,7 +164,7 @@ public class RecycleAdapterPemesanan extends RecyclerView.Adapter<RecycleAdapter
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private TextView mIdOrder,mIdSupplier,mIdCabang,mtanggal;
+        private TextView mIdOrder,mIdSupplier,mIdCabang,mtanggal,mTotal,mHarga;
         private CardView cardViewOrder;
 
         public MyViewHolder(@NonNull  View itemView){
@@ -171,6 +173,8 @@ public class RecycleAdapterPemesanan extends RecyclerView.Adapter<RecycleAdapter
             mIdSupplier=itemView.findViewById(R.id.supplierIDOrder);
             mIdCabang=itemView.findViewById(R.id.idCabangOrder);
             mtanggal=itemView.findViewById(R.id.tanggalOrder);
+            mHarga=itemView.findViewById(R.id.hargaShowOrder);
+            mTotal=itemView.findViewById(R.id.totalShowOrder);
             cardViewOrder=itemView.findViewById(R.id.cardViewAdapterOrder);
         }
 
@@ -196,7 +200,7 @@ public class RecycleAdapterPemesanan extends RecyclerView.Adapter<RecycleAdapter
                 String filterPatten = constraint.toString().toLowerCase().trim();
 
                 for(ShowPemesananDAO pemesananDAO : listFull){
-                    if (pemesananDAO.getIdPemesanan().toLowerCase().contains(filterPatten)){
+                    if (pemesananDAO.getDetailPemesanan().get(0).getSparepartDetail().toLowerCase().contains(filterPatten)){
                         filterList.add(pemesananDAO);
                     }
                 }

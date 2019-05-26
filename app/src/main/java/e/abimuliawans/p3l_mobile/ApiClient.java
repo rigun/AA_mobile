@@ -157,11 +157,11 @@ public interface ApiClient {
     //Order ========================================================================================
     @POST("order")
     @FormUrlEncoded
-    Call<OrderDAO> addOrder(@Field("supplier_id") Integer idSupplier,
+    Call<OrderDAO> addOrder(@Field("supplier_id") String idSupplier,
                             @Field("branch_id") Integer idCabang,
                             @Field("sparepart_code") String code,
                             @Field("unit") String unit,
-                            @Field("total") Integer total);
+                            @Field("total") String total);
 
     @GET("sparepartBS/{idSupplier}/{idCabang}")
     Call<ValueDataOrder> getPemesanan(@Path("idSupplier") Integer idSupplier,
