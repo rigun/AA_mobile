@@ -46,20 +46,6 @@ public class RecycleAdapterCabang extends RecyclerView.Adapter<RecycleAdapterCab
         myViewHolder.mId.setText(cab.getIdCabang());
         myViewHolder.mName.setText(cab.getNamaCabang());
 
-        myViewHolder.cardViewCabang.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Save Asset Order
-                SharedPreferences prefSupplier = context.getSharedPreferences("MyOrder", MODE_PRIVATE);
-                SharedPreferences.Editor editor = prefSupplier.edit();
-                editor.putString("idCabang", myViewHolder.mId.getText().toString());
-                editor.commit();
-
-                Intent intent = new Intent(context,SupplierOrderActivity.class);
-                context.startActivity(intent);
-            }
-        });
-
     }
 
     @Override

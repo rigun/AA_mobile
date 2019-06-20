@@ -4,7 +4,6 @@ import java.util.List;
 
 public class ValueKonsumen {
     List<KonsumenDAO> result;
-
     public List<KonsumenDAO> getResult(){
         return result;
     }

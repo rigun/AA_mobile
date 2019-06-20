@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
         android:layout_marginTop="32dp"
-        android:text="Nama Admin"
+        android:text="Nama"
         android:textColor="#FFF"
         android:fontFamily="@font/mr"
         android:textSize="20sp"
@@ -43,7 +43,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/walletuser"
+        android:id="@+id/roleuser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="17dp"

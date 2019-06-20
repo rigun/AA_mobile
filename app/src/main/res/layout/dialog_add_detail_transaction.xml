@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:id="@+id/textNamaSales"
-        android:text="Tambah Detail Transaksi"
+        android:text="Kendaraan Konsumen"
         android:textColor="#172646"
         android:fontFamily="@font/mm"
         android:textStyle="bold"

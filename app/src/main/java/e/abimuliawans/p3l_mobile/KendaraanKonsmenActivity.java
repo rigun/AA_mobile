@@ -33,9 +33,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class KendaraanKonsmenActivity extends AppCompatActivity {
 
-    private List<KendaraanKonsumenDAO> mListKendaraanKonsumen = new ArrayList<>();
+    private List<TransactionByCabangDAO> mListTransaction = new ArrayList<>();
     private RecyclerView recyclerView;
-    private RecycleAdapterKendaraanKonsumen recycleAdapterKendaraanKonsumen;
+    private RecycleAdapterTransaction recycleAdapterTransaction;
     private RecyclerView.LayoutManager layoutManager;
     private String token,BASE_URL,inputID,noTelp;
     private EditText txtNameTrans,txtPhoneTrans,txtCityTrans,txtAddressTrans;
@@ -48,11 +48,8 @@ public class KendaraanKonsmenActivity extends AppCompatActivity {
 
         //Pengambilan Token
         //Set Token and Base URL
-        BASE_URL = "http://10.53.0.196/";
-        token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMC41My4" +
-                "wLjE5NlwvYXV0aFwvbG9naW4iLCJpYXQiOjE1NTg0ODcwMTYsIm5iZiI6MTU1ODQ4NzAxNiwianRpIjoibUpVS" +
-                "G03YzlvNDR1SEJCaSIsInN1Y" +
-                "iI6MSwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.lR1MLziMcqMadRFXU7xp3OMRvZ25qX81zHxapXYqTTg";
+        BASE_URL = "https://api1.thekingcorp.org/";
+        token = "";
 
         //Inisialisasi Progres Bar
         progressBar = findViewById(R.id.progress_bar_kendaraan_konsumen);
@@ -64,12 +61,12 @@ public class KendaraanKonsmenActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //Inisialisasi Recycle
-        recyclerView =findViewById(R.id.recyclerViewKendaraanKonsumen);
-        recycleAdapterKendaraanKonsumen= new RecycleAdapterKendaraanKonsumen(KendaraanKonsmenActivity.this,mListKendaraanKonsumen);
-        RecyclerView.LayoutManager mLayoutManager= new LinearLayoutManager(getApplicationContext());
+        recyclerView = findViewById(R.id.recyclerViewKendaraanKonsumen);
+        recycleAdapterTransaction = new RecycleAdapterTransaction(KendaraanKonsmenActivity.this, mListTransaction);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(recycleAdapterKendaraanKonsumen);
+        recyclerView.setAdapter(recycleAdapterTransaction);
 
         //Pengecekan Bearer Token
         final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -84,60 +81,38 @@ public class KendaraanKonsmenActivity extends AppCompatActivity {
 
         // Menampilkan RecyclerView
         setRecycleViewKendaraanKonsumen(httpClient);
-        setListKendaraanKonsumen(httpClient,"8");
 
     }
 
-    private void setRecycleViewKendaraanKonsumen(final OkHttpClient.Builder httpClient2) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .client(httpClient2.build())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        ApiClient apiClient = retrofit.create(ApiClient.class);
-        Call<KonsumenDAO> transaction = apiClient.getCekKonsumen("123456");
-
-        transaction.enqueue(new Callback<KonsumenDAO>() {
-            @Override
-            public void onResponse(Call<KonsumenDAO> call, retrofit2.Response<KonsumenDAO> response) {
-                KonsumenDAO hasil = response.body();
-            }
-
-            @Override
-            public void onFailure(Call<KonsumenDAO> call, Throwable t) {
-                //
-            }
-        });
-    }
-
-    public void setListKendaraanKonsumen(OkHttpClient.Builder httpClient,String inputId){
+    private void setRecycleViewKendaraanKonsumen(final OkHttpClient.Builder httpClient) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(httpClient.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ApiClient apiClient = retrofit.create(ApiClient.class);
-        Call<KendaraanKonsumenDAO> transaction = apiClient.getKendaraanKonsumen(inputId);
+        Call<ValueKonsumen> transaction = apiClient.getTransKonsumen("1","12345");
 
-        transaction.enqueue(new Callback<KendaraanKonsumenDAO>() {
+        transaction.enqueue(new Callback<ValueKonsumen>() {
             @Override
-            public void onResponse(Call<KendaraanKonsumenDAO> call, retrofit2.Response<KendaraanKonsumenDAO> response) {
+            public void onResponse(Call<ValueKonsumen> call, retrofit2.Response<ValueKonsumen> response) {
                 progressBar.setVisibility(View.GONE);
                 LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(KendaraanKonsmenActivity.this,R.anim.layout_anim_recycle);
-                recyclerView.setLayoutAnimation(animationController);
-                recycleAdapterKendaraanKonsumen.notifyDataSetChanged();
-                KendaraanKonsumenDAO kendaraanKonsmenActivity = response.body();
-                //recycleAdapterKendaraanKonsumen=new RecycleAdapterKendaraanKonsumen(KendaraanKonsmenActivity.this,response.body());
-                recyclerView.setAdapter(recycleAdapterKendaraanKonsumen);
+                /*recyclerView.setLayoutAnimation(animationController);
+                recycleAdapterTransaction.notifyDataSetChanged();
+                recycleAdapterTransaction=new RecycleAdapterTransaction(KendaraanKonsmenActivity.this,response.body().getResult());
+                recyclerView.setAdapter(recycleAdapterTransaction);*/
 
             }
 
             @Override
-            public void onFailure(Call<KendaraanKonsumenDAO> call, Throwable t) {
+            public void onFailure(Call<ValueKonsumen> call, Throwable t) {
 
                 Toasty.error(KendaraanKonsmenActivity.this, t.getMessage(),
                         Toast.LENGTH_SHORT, true).show();
             }
         });
     }
+
+
 }

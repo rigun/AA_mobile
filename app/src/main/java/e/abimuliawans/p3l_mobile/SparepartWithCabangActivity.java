@@ -37,7 +37,7 @@ public class SparepartWithCabangActivity extends AppCompatActivity {
 
     private RecycleAdapterStokSparepart recycleAdapterStokSparepart;
     private RecyclerView.LayoutManager layoutManager;
-    private String token,BASE_URL;
+    private String token,BASE_URL,inputIDcabang;
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
     private List<StokSparepartDAO> mStokSparepart = new ArrayList<>();
@@ -71,6 +71,10 @@ public class SparepartWithCabangActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(recycleAdapterStokSparepart);
+
+        //Ambil ID Cabang
+        Bundle bundle = getIntent().getExtras();
+        inputIDcabang = bundle.getString("idCabang");
 
         //Pengecekan Bearer Token
         final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -137,7 +141,7 @@ public class SparepartWithCabangActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ApiClient apiClient = retrofit.create(ApiClient.class);
-        Call<List<StokSparepartDAO>> listCall = apiClient.getSparepartWithCabang("1");
+        Call<List<StokSparepartDAO>> listCall = apiClient.getSparepartWithCabang(inputIDcabang);
 
         listCall.enqueue(new Callback<List<StokSparepartDAO>>() {
             @Override
@@ -172,7 +176,7 @@ public class SparepartWithCabangActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ApiClient apiClient = retrofit.create(ApiClient.class);
-        Call<List<StokSparepartDAO>> listCall = apiClient.getSparepartWithCabang("1");
+        Call<List<StokSparepartDAO>> listCall = apiClient.getSparepartWithCabang(inputIDcabang);
 
         listCall.enqueue(new Callback<List<StokSparepartDAO>>() {
             @Override
@@ -207,7 +211,7 @@ public class SparepartWithCabangActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ApiClient apiClient = retrofit.create(ApiClient.class);
-        Call<List<StokSparepartDAO>> listCall = apiClient.getSparepartWithCabang("1");
+        Call<List<StokSparepartDAO>> listCall = apiClient.getSparepartWithCabang(inputIDcabang);
 
         listCall.enqueue(new Callback<List<StokSparepartDAO>>() {
             @Override

@@ -65,6 +65,7 @@ public class RecycleAdapterStokSparepart extends RecyclerView.Adapter<RecycleAda
         myViewHolder.mLimitStok.setText("Limit Stok : "+stokSparepartDAO.getLimitstockScp());
         myViewHolder.mPosition.setText(stokSparepartDAO.getPositionScp());
 
+
         final String code = stokSparepartDAO.getCodeSpareScp();
         final String buy = stokSparepartDAO.getBuyScp();
         final String sell = stokSparepartDAO.getSellScp();
@@ -78,8 +79,18 @@ public class RecycleAdapterStokSparepart extends RecyclerView.Adapter<RecycleAda
         final String token = pref.getString("token_access", null);
         final String BASE_URL = pref.getString("BASE_URL",null);
 
-        final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        //For Konsumen
+        SharedPreferences pref2 = context.getSharedPreferences("ForKonsumen", MODE_PRIVATE);
+        final String forKonusmen = pref2.getString("answer", null);
 
+        if(forKonusmen.equals("yes"))
+        {
+            myViewHolder.mSell.setVisibility(View.GONE);
+            myViewHolder.mPosition.setVisibility(View.GONE);
+            myViewHolder.mLimitStok.setVisibility(View.GONE);
+        }
+
+        final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -91,71 +102,80 @@ public class RecycleAdapterStokSparepart extends RecyclerView.Adapter<RecycleAda
         myViewHolder.cardViewStok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builderSal = new AlertDialog.Builder(context);
-                builderSal.setTitle("Pilih Pengaturan :");
-                builderSal.setMessage(myViewHolder.mCode.getText().toString());
-                builderSal.setCancelable(true);
+
+                if(forKonusmen.equals("yes"))
+                {
+                    // Tidak Dapat di klik
+                }
+                else if(forKonusmen.equals("no"))
+                {
+                    AlertDialog.Builder builderSal = new AlertDialog.Builder(context);
+                    builderSal.setTitle("Pilih Pengaturan :");
+                    builderSal.setMessage(myViewHolder.mCode.getText().toString());
+                    builderSal.setCancelable(true);
 
 
 
-                builderSal.setNeutralButton(
-                        "Cancel",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Cancel
-                            }
-                        });
+                    builderSal.setNeutralButton(
+                            "Cancel",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Cancel
+                                }
+                            });
 
-                builderSal.setPositiveButton(
-                        "Edit",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Edit Alert
-                                LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-                                AlertDialog.Builder mBuilderEditSpare = new AlertDialog.Builder(context);
-                                View mViewEditSpare = inflater.inflate(R.layout.dialog_edit_sparepart_cabang,null);
+                    builderSal.setPositiveButton(
+                            "Edit",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Edit Alert
+                                    LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+                                    AlertDialog.Builder mBuilderEditSpare = new AlertDialog.Builder(context);
+                                    View mViewEditSpare = inflater.inflate(R.layout.dialog_edit_sparepart_cabang,null);
 
-                                //Set Edit Text
-                                txtCodeSparepart = mViewEditSpare.findViewById(R.id.txtSparepart_codeEdit);
-                                txtPosition = mViewEditSpare.findViewById(R.id.txtPositionEdit);
-                                txtBuy = mViewEditSpare.findViewById(R.id.txtBuyEdit);
-                                txtSell = mViewEditSpare.findViewById(R.id.txtSellEdit);
-                                txtStock = mViewEditSpare.findViewById(R.id.txtStockEdit);
-                                txtLimitStock = mViewEditSpare.findViewById(R.id.txtLimitStokEdit);
+                                    //Set Edit Text
+                                    txtCodeSparepart = mViewEditSpare.findViewById(R.id.txtSparepart_codeEdit);
+                                    txtPosition = mViewEditSpare.findViewById(R.id.txtPositionEdit);
+                                    txtBuy = mViewEditSpare.findViewById(R.id.txtBuyEdit);
+                                    txtSell = mViewEditSpare.findViewById(R.id.txtSellEdit);
+                                    txtStock = mViewEditSpare.findViewById(R.id.txtStockEdit);
+                                    txtLimitStock = mViewEditSpare.findViewById(R.id.txtLimitStokEdit);
 
-                                txtCodeSparepart.setText(code);
-                                txtPosition.setText(position);
-                                txtBuy.setText(buy);
-                                txtSell.setText(sell);
-                                txtStock.setText(stok);
-                                txtLimitStock.setText(limitStok);
+                                    txtCodeSparepart.setText(code);
+                                    txtPosition.setText(position);
+                                    txtBuy.setText(buy);
+                                    txtSell.setText(sell);
+                                    txtStock.setText(stok);
+                                    txtLimitStock.setText(limitStok);
 
-                                mBuilderEditSpare.setView(mViewEditSpare)
-                                        .setPositiveButton("Edit Data", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                //Edit
-                                                editSparepartCabang(httpClient,BASE_URL,idSpare,code,position,
-                                                        sell,buy,stok,limitStok);
+                                    mBuilderEditSpare.setView(mViewEditSpare)
+                                            .setPositiveButton("Edit Data", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    //Edit
+                                                    editSparepartCabang(httpClient,BASE_URL,idSpare,code,position,
+                                                            sell,buy,stok,limitStok);
 
-                                            }
-                                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                                //Cancel
-                                    }
-                                });
+                                                }
+                                            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //Cancel
+                                        }
+                                    });
 
-                                AlertDialog dialogEdit = mBuilderEditSpare.create();
-                                dialogEdit.show();
+                                    AlertDialog dialogEdit = mBuilderEditSpare.create();
+                                    dialogEdit.show();
 
-                            }
-                        });
+                                }
+                            });
 
-                AlertDialog alertDialog = builderSal.create();
-                alertDialog.show();
+                    AlertDialog alertDialog = builderSal.create();
+                    alertDialog.show();
+                }
+
             }
         });
     }

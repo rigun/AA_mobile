@@ -244,7 +244,6 @@ public class SparepartActivity extends AppCompatActivity implements SearchView.O
                     String inputCab = idCab+" - "+nameCab;
                     listSpinnerCabang.add(inputCab);
                 }
-                listSpinnerCabang.add(0,"-SELECT ID CABANG-");
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(SparepartActivity.this,
                         android.R.layout.simple_spinner_item,listSpinnerCabang);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

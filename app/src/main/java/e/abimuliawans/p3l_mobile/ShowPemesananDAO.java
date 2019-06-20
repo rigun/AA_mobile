@@ -27,6 +27,10 @@ public class ShowPemesananDAO {
     @Expose
     public List<DetailOrderDAO> detailPemesanan;
 
+    @SerializedName("status")
+    @Expose
+    public String statusPemesanan;
+
 
     public ShowPemesananDAO(String idPemesanan, String idSupplierPemesanan, String idCabangPemesanan, String tanggalPemesanan) {
         this.idPemesanan = idPemesanan;
@@ -69,5 +73,9 @@ public class ShowPemesananDAO {
 
     public List<DetailOrderDAO> getDetailPemesanan() {
         return detailPemesanan;
+    }
+
+    public String getStatusPemesanan() {
+        return statusPemesanan;
     }
 }

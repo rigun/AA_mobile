@@ -78,7 +78,19 @@ public class RecycleAdapterTransaction extends RecyclerView.Adapter<RecycleAdapt
         {
             //Selesai
             myViewHolder.btnStatus.setBackgroundResource(R.drawable.btn_progres_selesai);
-            myViewHolder.btnStatus.setText("Selesai");
+            myViewHolder.btnStatus.setText("Transaksi Selesai");
+        }
+        else if(transactionByCabangDAO.getStatus().equals("2"))
+        {
+            //Pengisisan Data
+            myViewHolder.btnStatus.setBackgroundResource(R.drawable.btn_progres_pengisisan_data);
+            myViewHolder.btnStatus.setText("Pengerjaan Selesai");
+        }
+        else if(transactionByCabangDAO.getStatus().equals("1"))
+        {
+            //Pengisisan Data
+            myViewHolder.btnStatus.setBackgroundResource(R.drawable.btn_progres_pemesanan);
+            myViewHolder.btnStatus.setText("Sedang Dikerjakan");
         }
         else if(transactionByCabangDAO.getStatus().equals("0"))
         {

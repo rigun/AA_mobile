@@ -171,8 +171,8 @@ public interface ApiClient {
     Call<List<ShowPemesananDAO>> getOrder(@Path("idCabang") Integer idCabang);
 
     @DELETE("sparepartBS/{idSupplier}/{idCabang}")
-    Call<ShowPemesananDAO> deleteOrder(@Path("idSupplier") Integer idSupplier,
-                                       @Path("idCabang") Integer idCabang);
+    Call<ShowPemesananDAO> deleteOrder(@Path("idSupplier") String idSupplier,
+                                       @Path("idCabang") String idCabang);
 
     // Transaction ==================================================================================
 
@@ -196,8 +196,17 @@ public interface ApiClient {
     Call<TransactionDAO> addDetailTransaction(@Field("licensePlate") String noPlat,
                                               @Field("vehicle_id") String idVehicle,
                                               @Field("transaction_id") String idTransaction);
+
+    @POST("detailTransaction/{vehiclecustomerid}")
+    @FormUrlEncoded
+    Call<TransactionDAO> updateDetailTransaction(@Path("vehiclecustomerid") String idTransaction,
+                                                @Field("licensePlate") String noPlat,
+                                                @Field("vehicle_id") String idVehicle);
     @GET("detailTransaction/{transactionId}")
     Call<List<TransactionDetailDAO>> getTransactionDetail(@Path("transactionId") String transactionId);
+
+    @DELETE("detailTransaction/{transactionDetailId}")
+    Call<TransactionDAO> deleteTransactionDetail(@Path("transactionDetailId") String id);
 
     @DELETE("transaction/{id}")
     Call<TransactionDAO> deleteTransaction(@Path("id") String idTrans);
@@ -292,9 +301,13 @@ public interface ApiClient {
     @GET("cekPhoneNumber/{phoneNumber}")
     Call<KonsumenDAO> getCekKonsumen(@Path("phoneNumber") String phoneNumber);
 
+    @GET("support/myTransaction/{cVehicleId}/{phoneNumber}")
+    Call<ValueKonsumen> getTransKonsumen(@Path("cVehicleId") String cVehicleId,
+                                                      @Path("phoneNumber") String phoneNumber);
+
     @POST("support/myTransaction")
     @FormUrlEncoded
-    Call<DetailLayananDAO> callBackTransaction(@Field("phoneNumber") String phone,
-                                               @Field("licensePlate") String plat);
+    Call<KonsumenDAO> callBackTransaction(@Field("phoneNumber") String phone,
+                                          @Field("licensePlate") String plat);
 
 }

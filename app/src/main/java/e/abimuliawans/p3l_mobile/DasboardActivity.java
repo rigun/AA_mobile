@@ -48,12 +48,12 @@ public class DasboardActivity extends AppCompatActivity {
 
     private Animation atg, atgtwo, atgthree, fabOpen, fabClose, fabClockwise, fabAntiClockwise
             ,cardOpen,cardClose;
-    private TextView pagetitle,pagesubtitle,txtFab;
+    private TextView pagetitle,pagesubtitle,txtFab,roleuser,nameuser;
     private CardView cardViewVeh,cardViewLogout,cardViewSales,cardViewKonsumen,cardViewReportPerbulan,cardViewReportPengeluaran,
     cardViewReportStok;
     private ImageView imageView3,imgSparepart,imgSupplier, imgPemesanan,imgTransaksi;
     private FloatingActionButton fabMenuLainya,fabVehicle,fabLogout,fabSales,fabKonsumen,fabReport;
-    private String token,BASE_URL;
+    private String token,BASE_URL,role;
     private Spinner spinnerCabang,spinnerTahunPengeluaran,spinnerTahunPendapatan,spinnerTahunSparepartTer;
     private List<String> listSpinnerCabang = new ArrayList<String>();
     private List<StokSparepartDAO> listStokSparepart;
@@ -74,6 +74,13 @@ public class DasboardActivity extends AppCompatActivity {
         SharedPreferences pref = getApplication().getSharedPreferences("MyToken", Context.MODE_PRIVATE);
         token = pref.getString("token_access", null);
         BASE_URL = pref.getString("BASE_URL",null);
+        role = pref.getString("role",null);
+
+        //For Konsumen
+        SharedPreferences pref2 = getApplicationContext().getSharedPreferences("ForKonsumen", MODE_PRIVATE);
+        SharedPreferences.Editor editor2 = pref2.edit();
+        editor2.putString("answer", "no");
+        editor2.commit();
 
         //Pengecekan Bearer Token
         final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -102,14 +109,14 @@ public class DasboardActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(listStokSparepart==null)
+                if(listStokSparepart.size() == 0)
                 {
                     //Tidak Terdapat Stok Kurang
                 }
                 else
                 {
                     //Show Notification
-                    //displayNotification();
+                    displayNotification();
                 }
             }
         }, 5000);
@@ -120,37 +127,44 @@ public class DasboardActivity extends AppCompatActivity {
         imgPemesanan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(DasboardActivity.this);
-                View mView = getLayoutInflater().inflate(R.layout.dialog_pilih_cabang,null);
+                if(role.equals("owner"))
+                {
+                    AlertDialog.Builder mBuilder = new AlertDialog.Builder(DasboardActivity.this);
+                    View mView = getLayoutInflater().inflate(R.layout.dialog_pilih_cabang,null);
 
-                loadSpinnerCabang(httpClient);
-                spinnerCabang = mView.findViewById(R.id.spinnerPilihCabangOrder);
+                    loadSpinnerCabang(httpClient);
+                    spinnerCabang = mView.findViewById(R.id.spinnerPilihCabangOrder);
 
-                mBuilder.setView(mView)
-                        .setPositiveButton("Pilih", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Ambil data ID Cabang
-                                String spinnerOrder = spinnerCabang.getSelectedItem().toString();
-                                String inputOrder = Character.toString(spinnerOrder.charAt(0));
-                                Intent intent = new Intent(DasboardActivity.this,PemesananActivity.class);
-                                intent.putExtra("idCabang", inputOrder);
-                                listSpinnerCabang.clear();
-                                spinnerCabang.setAdapter(null);
-                                startActivity(intent);
+                    mBuilder.setView(mView)
+                            .setPositiveButton("Pilih", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Ambil data ID Cabang
+                                    String spinnerOrder = spinnerCabang.getSelectedItem().toString();
+                                    String inputOrder = Character.toString(spinnerOrder.charAt(0));
+                                    Intent intent = new Intent(DasboardActivity.this,PemesananActivity.class);
+                                    intent.putExtra("idCabang", inputOrder);
+                                    listSpinnerCabang.clear();
+                                    spinnerCabang.setAdapter(null);
+                                    startActivity(intent);
 
-                            }
-                        }).setNegativeButton("Batal", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Batal
-                            }
-                });
+                                }
+                            }).setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //Batal
+                        }
+                    });
 
 
-                AlertDialog dialog = mBuilder.create();
-                dialog.show();
-
+                    AlertDialog dialog = mBuilder.create();
+                    dialog.show();
+                }
+                else if(role.equals("cs"))
+                {
+                    Toasty.warning(DasboardActivity.this, "Tidak Mendapat Hak Akses",
+                            Toast.LENGTH_SHORT, true).show();
+                }
             }
         });
 
@@ -158,8 +172,16 @@ public class DasboardActivity extends AppCompatActivity {
         imgSparepart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(DasboardActivity.this, SparepartActivity.class);
-                startActivity(i);
+                if(role.equals("owner"))
+                {
+                    Intent i = new Intent(DasboardActivity.this, SparepartActivity.class);
+                    startActivity(i);
+                }
+                else if(role.equals("cs"))
+                {
+                    Toasty.warning(DasboardActivity.this, "Tidak Mendapat Hak Akses",
+                            Toast.LENGTH_SHORT, true).show();
+                }
             }
         });
 
@@ -167,10 +189,19 @@ public class DasboardActivity extends AppCompatActivity {
         imgSupplier.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences prefVeh = getApplication().getSharedPreferences("MySupplier", Context.MODE_PRIVATE);
-                prefVeh.edit().clear().commit();
-                Intent i = new Intent(DasboardActivity.this, SupplierActivity.class);
-                startActivity(i);
+                if(role.equals("owner"))
+                {
+                    SharedPreferences prefVeh = getApplication().getSharedPreferences("MySupplier", Context.MODE_PRIVATE);
+                    prefVeh.edit().clear().commit();
+                    Intent i = new Intent(DasboardActivity.this, SupplierActivity.class);
+                    startActivity(i);
+                }
+                else if(role.equals("cs"))
+                {
+                    Toasty.warning(DasboardActivity.this, "Tidak Mendapat Hak Akses",
+                            Toast.LENGTH_SHORT, true).show();
+                }
+
             }
         });
 
@@ -179,39 +210,55 @@ public class DasboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(DasboardActivity.this);
-                View mView = getLayoutInflater().inflate(R.layout.dialog_pilih_cabang,null);
+                if(role.equals("owner"))
+                {
+                    Toasty.warning(DasboardActivity.this, "Tidak Mendapat Hak Akses",
+                            Toast.LENGTH_SHORT, true).show();
+                }
+                else if(role.equals("cs"))
+                {
+                    AlertDialog.Builder mBuilder = new AlertDialog.Builder(DasboardActivity.this);
+                    View mView = getLayoutInflater().inflate(R.layout.dialog_pilih_cabang,null);
 
-                loadSpinnerCabang(httpClient);
-                spinnerCabang = mView.findViewById(R.id.spinnerPilihCabangOrder);
+                    loadSpinnerCabang(httpClient);
+                    spinnerCabang = mView.findViewById(R.id.spinnerPilihCabangOrder);
 
-                mBuilder.setView(mView)
-                        .setPositiveButton("Pilih", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Ambil data ID Cabang
-                                String spinnerTrans = spinnerCabang.getSelectedItem().toString();
-                                String inputTrans = Character.toString(spinnerTrans.charAt(0));
-                                Intent intent = new Intent(DasboardActivity.this,TransactionActivity.class);
-                                intent.putExtra("idCabang", inputTrans);
-                                listSpinnerCabang.clear();
-                                spinnerCabang.setAdapter(null);
-                                startActivity(intent);
-                            }
-                        }).setNegativeButton("Batal", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                                //Batal
-                    }
-                });
+                    mBuilder.setView(mView)
+                            .setPositiveButton("Pilih", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Ambil data ID Cabang
+                                    String spinnerTrans = spinnerCabang.getSelectedItem().toString();
+                                    String inputTrans = Character.toString(spinnerTrans.charAt(0));
+                                    Intent intent = new Intent(DasboardActivity.this,TransactionActivity.class);
+                                    intent.putExtra("idCabang", inputTrans);
+                                    listSpinnerCabang.clear();
+                                    spinnerCabang.setAdapter(null);
+                                    startActivity(intent);
+                                }
+                            }).setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //Batal
+                        }
+                    });
 
 
-                AlertDialog dialog = mBuilder.create();
-                dialog.show();
-
+                    AlertDialog dialog = mBuilder.create();
+                    dialog.show();
+                }
             }
         });
 
+        roleuser = findViewById(R.id.roleuser);
+        if(role.equals("owner"))
+        {
+            roleuser.setText("Owner");
+        }
+        else if(role.equals("cs"))
+        {
+            roleuser.setText("CS");
+        }
 
         atg = AnimationUtils.loadAnimation(DasboardActivity.this, R.anim.atg);
         atgtwo = AnimationUtils.loadAnimation(DasboardActivity.this, R.anim.atgtwo);
@@ -292,111 +339,119 @@ public class DasboardActivity extends AppCompatActivity {
         fabReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(DasboardActivity.this);
-                View mView = getLayoutInflater().inflate(R.layout.dialog_option_report,null);
 
-                cardViewReportPengeluaran = mView.findViewById(R.id.cardViewPengeluaranPerbulan);
-                cardViewReportPerbulan = mView.findViewById(R.id.cardViewPendapatanPerbulan);
-                cardViewReportStok = mView.findViewById(R.id.cardViewSparepartTerlaris);
+                //Cek role
+                if(role.equals("cs"))
+                {
 
-                mBuilder.setView(mView)
-                        .setNegativeButton("Batal", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Batal
-                            }
-                        });
+                }else if(role.equals("owner"))
+                {
+                    AlertDialog.Builder mBuilder = new AlertDialog.Builder(DasboardActivity.this);
+                    View mView = getLayoutInflater().inflate(R.layout.dialog_option_report,null);
 
-                final AlertDialog dialog = mBuilder.create();
-                dialog.show();
+                    cardViewReportPengeluaran = mView.findViewById(R.id.cardViewPengeluaranPerbulan);
+                    cardViewReportPerbulan = mView.findViewById(R.id.cardViewPendapatanPerbulan);
+                    cardViewReportStok = mView.findViewById(R.id.cardViewSparepartTerlaris);
 
-                cardViewReportPengeluaran.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //Fungsi Report
-                        dialog.cancel();
-                        AlertDialog.Builder mBuilderYearsPengeluaran = new AlertDialog.Builder(DasboardActivity.this);
-                        View mViewYearsPegeluaran = getLayoutInflater().inflate(R.layout.dialog_input_tahun,null);
-                        spinnerTahunPengeluaran = mViewYearsPegeluaran.findViewById(R.id.spinnerTahunReport);
+                    mBuilder.setView(mView)
+                            .setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Batal
+                                }
+                            });
 
-                        mBuilderYearsPengeluaran.setView(mViewYearsPegeluaran)
-                                .setNegativeButton("Batal", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //Batal
-                                    }
-                                })
-                                .setPositiveButton("Pilih", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //Pilih
-                                        downloadRepotPengeluaran(spinnerTahunPengeluaran.getSelectedItem().toString());
-                                    }
-                                });
+                    final AlertDialog dialog = mBuilder.create();
+                    dialog.show();
 
-                        AlertDialog dialogPengeluaran = mBuilderYearsPengeluaran.create();
-                        dialogPengeluaran.show();
+                    cardViewReportPengeluaran.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //Fungsi Report
+                            dialog.cancel();
+                            AlertDialog.Builder mBuilderYearsPengeluaran = new AlertDialog.Builder(DasboardActivity.this);
+                            View mViewYearsPegeluaran = getLayoutInflater().inflate(R.layout.dialog_input_tahun,null);
+                            spinnerTahunPengeluaran = mViewYearsPegeluaran.findViewById(R.id.spinnerTahunReport);
 
-                    }
-                });
+                            mBuilderYearsPengeluaran.setView(mViewYearsPegeluaran)
+                                    .setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //Batal
+                                        }
+                                    })
+                                    .setPositiveButton("Pilih", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //Pilih
+                                            downloadRepotPengeluaran(spinnerTahunPengeluaran.getSelectedItem().toString());
+                                        }
+                                    });
 
-                cardViewReportStok.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //Fungsi Report
-                        dialog.cancel();
-                        AlertDialog.Builder mBuilderYearsStok = new AlertDialog.Builder(DasboardActivity.this);
-                        View mViewYearsStok = getLayoutInflater().inflate(R.layout.dialog_input_tahun,null);
-                        spinnerTahunSparepartTer = mViewYearsStok.findViewById(R.id.spinnerTahunReport);
+                            AlertDialog dialogPengeluaran = mBuilderYearsPengeluaran.create();
+                            dialogPengeluaran.show();
 
-                        mBuilderYearsStok.setView(mViewYearsStok)
-                                .setNegativeButton("Batal", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //Batal
-                                    }
-                                })
-                                .setPositiveButton("Pilih", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //Pilih
-                                        downloadRepotSparepartTerlaris(spinnerTahunSparepartTer.getSelectedItem().toString());
-                                    }
-                                });
+                        }
+                    });
 
-                        AlertDialog dialogStok = mBuilderYearsStok.create();
-                        dialogStok.show();
-                    }
-                });
+                    cardViewReportStok.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //Fungsi Report
+                            dialog.cancel();
+                            AlertDialog.Builder mBuilderYearsStok = new AlertDialog.Builder(DasboardActivity.this);
+                            View mViewYearsStok = getLayoutInflater().inflate(R.layout.dialog_input_tahun,null);
+                            spinnerTahunSparepartTer = mViewYearsStok.findViewById(R.id.spinnerTahunReport);
 
-                cardViewReportPerbulan.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //Fugsi Report
-                        dialog.cancel();
-                        AlertDialog.Builder mBuilderYearsPendapatan = new AlertDialog.Builder(DasboardActivity.this);
-                        View mViewYearsPendapatan = getLayoutInflater().inflate(R.layout.dialog_input_tahun,null);
-                        spinnerTahunPendapatan = mViewYearsPendapatan.findViewById(R.id.spinnerTahunReport);
+                            mBuilderYearsStok.setView(mViewYearsStok)
+                                    .setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //Batal
+                                        }
+                                    })
+                                    .setPositiveButton("Pilih", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //Pilih
+                                            downloadRepotSparepartTerlaris(spinnerTahunSparepartTer.getSelectedItem().toString());
+                                        }
+                                    });
 
-                        mBuilderYearsPendapatan.setView(mViewYearsPendapatan)
-                                .setNegativeButton("Batal", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //Batal
-                                    }
-                                })
-                                .setPositiveButton("Pilih", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //Pilih
-                                        downloadRepotPerbulan(spinnerTahunPendapatan.getSelectedItem().toString());
-                                    }
-                                });
+                            AlertDialog dialogStok = mBuilderYearsStok.create();
+                            dialogStok.show();
+                        }
+                    });
 
-                        AlertDialog dialogPendapatan = mBuilderYearsPendapatan.create();
-                        dialogPendapatan.show();
-                    }
-                });
+                    cardViewReportPerbulan.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //Fugsi Report
+                            dialog.cancel();
+                            AlertDialog.Builder mBuilderYearsPendapatan = new AlertDialog.Builder(DasboardActivity.this);
+                            View mViewYearsPendapatan = getLayoutInflater().inflate(R.layout.dialog_input_tahun,null);
+                            spinnerTahunPendapatan = mViewYearsPendapatan.findViewById(R.id.spinnerTahunReport);
+
+                            mBuilderYearsPendapatan.setView(mViewYearsPendapatan)
+                                    .setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //Batal
+                                        }
+                                    })
+                                    .setPositiveButton("Pilih", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //Pilih
+                                            downloadRepotPerbulan(spinnerTahunPendapatan.getSelectedItem().toString());
+                                        }
+                                    });
+
+                            AlertDialog dialogPendapatan = mBuilderYearsPendapatan.create();
+                            dialogPendapatan.show();
+                        }
+                    });
+                }
 
             }
         });
@@ -425,8 +480,18 @@ public class DasboardActivity extends AppCompatActivity {
         fabSales.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DasboardActivity.this,SalesActivity.class);
-                startActivity(intent);
+
+                if(role.equals("owner"))
+                {
+                    Intent intent = new Intent(DasboardActivity.this,SalesActivity.class);
+                    startActivity(intent);
+                }
+                else if(role.equals("cs"))
+                {
+                    Toasty.warning(DasboardActivity.this, "Tidak Mendapat Hak Akses",
+                            Toast.LENGTH_SHORT, true).show();
+                }
+
             }
         });
 
@@ -538,7 +603,6 @@ public class DasboardActivity extends AppCompatActivity {
                     String inputCab = idCab+" - "+nameCab;
                     listSpinnerCabang.add(inputCab);
                 }
-                listSpinnerCabang.add(0,"-SELECT ID CABANG-");
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(DasboardActivity.this,
                         android.R.layout.simple_spinner_item,listSpinnerCabang);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

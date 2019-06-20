@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText txtEmail,txtPass;
     private Button btnLogin;
     private ProgressDialog dialog;
-    private String token,testMerk;
+    private String token,testMerk,role;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
                     .setLenient()
                     .create();
             Retrofit.Builder builder=new Retrofit.
-                    Builder().baseUrl("https://api1.thekingcorp.org/auth/").
+                    Builder().baseUrl("http://192.168.19.140/K_8725/AA_Api/public/auth/").
                     addConverterFactory(GsonConverterFactory.create(gson));
             Retrofit retrofit=builder.build();
             ApiClient apiClient=retrofit.create(ApiClient.class);
@@ -103,12 +103,14 @@ public class LoginActivity extends AppCompatActivity {
                     {
                         dialog.dismiss();
                         token = response.body().getToken();
+                        role = response.body().getRole();
 
                         //Save Token and URL
                         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyToken", MODE_PRIVATE);
                         SharedPreferences.Editor editor = pref.edit();
                         editor.putString("token_access", token);
-                        editor.putString("BASE_URL","https://api1.thekingcorp.org/");
+                        editor.putString("BASE_URL","http://192.168.19.140/K_8725/AA_Api/public/");
+                        editor.putString("role", role);
                         editor.commit();
 
                         Toasty.success(LoginActivity.this, "Login Success",

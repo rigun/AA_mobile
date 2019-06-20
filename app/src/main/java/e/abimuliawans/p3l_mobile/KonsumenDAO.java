@@ -20,6 +20,10 @@ public class KonsumenDAO {
     @Expose
     public String cityKonsumen;
 
+    @SerializedName("cVehicleId")
+    @Expose
+    public String cVehicleId;
+
     public KonsumenDAO(String idKonsumen, String nameKonsumen, String phoneKonsumen, String addressKonsumen, String cityKonsumen) {
         this.idKonsumen = idKonsumen;
         this.nameKonsumen = nameKonsumen;
@@ -66,5 +70,9 @@ public class KonsumenDAO {
 
     public void setCityKonsumen(String cityKonsumen) {
         this.cityKonsumen = cityKonsumen;
+    }
+
+    public String getcVehicleId() {
+        return cVehicleId;
     }
 }

@@ -7,7 +7,10 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
@@ -28,7 +31,7 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class TransaksiDetailActivity extends AppCompatActivity {
+public class TransaksiDetailActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     private List<TransactionDetailDAO> mListTransactionDetail = new ArrayList<>();
     private RecyclerView recyclerView;
@@ -113,5 +116,26 @@ public class TransaksiDetailActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT, true).show();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu,menu);
+
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        SearchView searchView =(SearchView) menuItem.getActionView();
+        searchView.setOnQueryTextListener(this);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        recycleAdapterTransactionDetail.getFilter().filter(s);
+        return false;
     }
 }

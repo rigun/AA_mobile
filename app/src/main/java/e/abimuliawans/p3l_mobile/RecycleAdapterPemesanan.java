@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
@@ -56,13 +57,32 @@ public class RecycleAdapterPemesanan extends RecyclerView.Adapter<RecycleAdapter
 
     @Override
     public void onBindViewHolder(final RecycleAdapterPemesanan.MyViewHolder myViewHolder, int i) {
-        ShowPemesananDAO dataDAO = result.get(i);
+        final ShowPemesananDAO dataDAO = result.get(i);
         myViewHolder.mIdOrder.setText(dataDAO.getIdPemesanan());
         myViewHolder.mIdSupplier.setText("Pesanan : "+dataDAO.getDetailPemesanan().get(0).getSparepartDetail());
         myViewHolder.mIdCabang.setText("Unit : "+dataDAO.getDetailPemesanan().get(0).getUnit());
         myViewHolder.mTotal.setText("Total Pesan : "+dataDAO.getDetailPemesanan().get(0).getTotalDetail());
         myViewHolder.mHarga.setText("Harga :"+dataDAO.getDetailPemesanan().get(0).getBuy());
         myViewHolder.mtanggal.setText("Tanggal : "+dataDAO.getTanggalPemesanan());
+
+        if(dataDAO.getStatusPemesanan().equals("2"))
+        {
+            //Selesai
+            myViewHolder.btnProgres.setBackgroundResource(R.drawable.btn_progres_selesai);
+            myViewHolder.btnProgres.setText("Pesanan Selesai");
+        }
+        else if(dataDAO.getStatusPemesanan().equals("1"))
+        {
+            //Sedang Dipesan
+            myViewHolder.btnProgres.setBackgroundResource(R.drawable.btn_progres_pemesanan);
+            myViewHolder.btnProgres.setText("Sedang DIpesan");
+        }
+        else if(dataDAO.getStatusPemesanan().equals("0"))
+        {
+            //Pengisisan Data
+            myViewHolder.btnProgres.setBackgroundResource(R.drawable.btn_progres_pengisisan_data);
+            myViewHolder.btnProgres.setText("Pengisisan Data");
+        }
 
         //Get Token
         SharedPreferences pref = context.getSharedPreferences("MyToken", MODE_PRIVATE);
@@ -82,51 +102,61 @@ public class RecycleAdapterPemesanan extends RecyclerView.Adapter<RecycleAdapter
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //Delete
-                                Integer idSupplier = Integer.valueOf(myViewHolder.mIdSupplier.getText().toString());
-                                Integer inputIdCabang = Integer.valueOf(myViewHolder.mIdCabang.getText().toString());
+                                String status = dataDAO.getStatusPemesanan();
+                                if(status.equals("2"))
+                                {
+                                    Toasty.warning(context, "Data Sudah Selesai Tidak Dapat Dihapus",
+                                            Toast.LENGTH_SHORT, true).show();
+                                }
+                                else
+                                {
+                                    String idSupplier = dataDAO.getIdSupplierPemesanan();
+                                    String inputIdCabang = dataDAO.getIdCabangPemesanan();
 
-                                final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+                                    final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
-                                httpClient.addInterceptor(new Interceptor() {
-                                    @Override
-                                    public Response intercept(Chain chain) throws IOException {
-                                        Request request = chain.request().newBuilder().addHeader("Authorization", "Bearer "+token).build();
-                                        return chain.proceed(request);
-                                    }
-                                });
-
-                                Retrofit retrofit = new Retrofit.Builder()
-                                        .baseUrl(BASE_URL)
-                                        .client(httpClient.build())
-                                        .addConverterFactory(GsonConverterFactory.create())
-                                        .build();
-                                ApiClient apiClient = retrofit.create(ApiClient.class);
-                                Call<ShowPemesananDAO> pemesananDAOCall = apiClient.deleteOrder(idSupplier,inputIdCabang);
-
-                                pemesananDAOCall.enqueue(new Callback<ShowPemesananDAO>() {
-                                    @Override
-                                    public void onResponse(Call<ShowPemesananDAO> call, retrofit2.Response<ShowPemesananDAO> response) {
-                                        if(response.isSuccessful())
-                                        {
-                                            Toasty.success(context, "Pemesanan Berhasil Sihapus",
-                                                    Toast.LENGTH_SHORT, true).show();
-
-                                            Intent intent = new Intent(context,DasboardActivity.class);
-                                            context.startActivity(intent);
+                                    httpClient.addInterceptor(new Interceptor() {
+                                        @Override
+                                        public Response intercept(Chain chain) throws IOException {
+                                            Request request = chain.request().newBuilder().addHeader("Authorization", "Bearer "+token).build();
+                                            return chain.proceed(request);
                                         }
-                                        else{
+                                    });
 
+                                    Retrofit retrofit = new Retrofit.Builder()
+                                            .baseUrl(BASE_URL)
+                                            .client(httpClient.build())
+                                            .addConverterFactory(GsonConverterFactory.create())
+                                            .build();
+                                    ApiClient apiClient = retrofit.create(ApiClient.class);
+                                    Call<ShowPemesananDAO> pemesananDAOCall = apiClient.deleteOrder(idSupplier,inputIdCabang);
+
+                                    pemesananDAOCall.enqueue(new Callback<ShowPemesananDAO>() {
+                                        @Override
+                                        public void onResponse(Call<ShowPemesananDAO> call, retrofit2.Response<ShowPemesananDAO> response) {
+                                            if(response.isSuccessful())
+                                            {
+                                                Toasty.success(context, "Pemesanan Berhasil Sihapus",
+                                                        Toast.LENGTH_SHORT, true).show();
+
+                                                Intent intent = new Intent(context,DasboardActivity.class);
+                                                context.startActivity(intent);
+                                            }
+                                            else{
+
+                                                Toasty.error(context, "Gagal Menghapus Data",
+                                                        Toast.LENGTH_SHORT, true).show();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<ShowPemesananDAO> call, Throwable t) {
                                             Toasty.error(context, "Gagal Menghapus Data",
                                                     Toast.LENGTH_SHORT, true).show();
                                         }
-                                    }
+                                    });
+                                }
 
-                                    @Override
-                                    public void onFailure(Call<ShowPemesananDAO> call, Throwable t) {
-                                        Toasty.error(context, "Gagal Menghapus Data",
-                                                Toast.LENGTH_SHORT, true).show();
-                                    }
-                                });
 
                             }
                         });
@@ -166,6 +196,7 @@ public class RecycleAdapterPemesanan extends RecyclerView.Adapter<RecycleAdapter
 
         private TextView mIdOrder,mIdSupplier,mIdCabang,mtanggal,mTotal,mHarga;
         private CardView cardViewOrder;
+        private Button btnProgres;
 
         public MyViewHolder(@NonNull  View itemView){
             super(itemView);
@@ -176,6 +207,7 @@ public class RecycleAdapterPemesanan extends RecyclerView.Adapter<RecycleAdapter
             mHarga=itemView.findViewById(R.id.hargaShowOrder);
             mTotal=itemView.findViewById(R.id.totalShowOrder);
             cardViewOrder=itemView.findViewById(R.id.cardViewAdapterOrder);
+            btnProgres=itemView.findViewById(R.id.btnShowStatusOrder);
         }
 
         @Override
